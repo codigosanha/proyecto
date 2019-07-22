@@ -14,14 +14,13 @@ class Inventario_model extends CI_Model {
 		return $this->db->insert("inventario_producto", $data);
 	}
 
-	public function getInventario($month, $year){
-		$this->db->where("month",$month);
-		$this->db->where("year", $year);
-		$resultado = $this->db->get("inventarios");
-		if ($resultado->num_rows() > 0) {
-			return $resultado->row();
-		}
-		return false;
+	public function getInventario($sucursal){
+		$this->db->select("p.nombre, i.*");
+		$this->db->from("inventario i");
+		$this->db->join("productos p", "i.producto_id = p.id");
+		$this->db->where("i.sucursal_id",$sucursal);
+		$resultados = $this->db->get();
+		return $resultados->result();
 	}	
 
 	public function getProductos($idinventario,$month,$year){

@@ -38,4 +38,13 @@ class Usuarios_model extends CI_Model {
 			return false;//Si no hay registros en la consulta
 		}
 	}
+
+	public function getSucursal($id){
+		$this->db->select("e.sucursal_id");
+		$this->db->from("usuarios u");
+		$this->db->join("empleados e", "e.id = u.empleado_id");
+		$this->db->where("u.id",$id);
+		$resultados = $this->db->get();
+		return $resultados->row();
+	}	
 }

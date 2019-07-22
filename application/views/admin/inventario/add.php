@@ -4,7 +4,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-        Categorias
+        Productos a Inventariar
         <small>Nuevo</small>
         </h1>
     </section>
@@ -23,10 +23,28 @@
                              </div>
                         <?php endif;?>
                         <form action="<?php echo base_url();?>almacen/categorias/store" method="POST">
-                            <div class="form-group <?php echo form_error('nombre') == true ? 'has-error':''?>">
-                                <label for="nombre">Nombre:</label>
-                                <input type="text" class="form-control" id="nombre" name="nombre" value="<?php echo set_value('nombre')?:'';?>">
-                                <?php echo form_error("nombre","<span class='help-block'>","</span>");?>
+                            <div class="form-group">
+                                <p>Seleccione los nuevos a inventariar</p>
+                                <table id="example1">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th>Codigo de Barra</th>
+                                            <th>Nombre</th>
+                                            <th>Categoria</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($productos as $producto): ?>
+                                            <tr>
+                                                <td>
+                                                    
+                                                </td>
+                                            </tr>
+                                        <?php endforeach ?>
+                                    </tbody>
+                                </table>
                             </div>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-success btn-flat">Guardar</button>

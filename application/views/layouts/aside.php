@@ -58,9 +58,9 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="#"><i class="fa fa-circle-o"></i> Ventas</a></li>
-            <li><a href="#"><i class="fa fa-circle-o"></i> Compras</a></li>
-            <li><a href="#"><i class="fa fa-circle-o"></i> Pedidos</a></li>
+            <li><a href="<?php echo base_url();?>movimientos/ventas"><i class="fa fa-circle-o"></i> Ventas</a></li>
+            <li><a href="<?php echo base_url();?>movimientos/compras"><i class="fa fa-circle-o"></i> Compras</a></li>
+            <li><a href="<?php echo base_url();?>movimientos/pedidos"><i class="fa fa-circle-o"></i> Pedidos</a></li>
           </ul>
         </li>
 
@@ -81,13 +81,13 @@
         <li class="treeview">
           <a href="#">
             <i class="fa fa-dropbox"></i>
-            <span>Inventarios</span>
+            <span>Inventario</span>
             <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="#"><i class="fa fa-circle-o"></i> Inventarios</a></li>
+            <li><a href="<?php echo base_url();?>inventario/productos"><i class="fa fa-circle-o"></i> Productos</a></li>
           </ul>
         </li>
 

@@ -3,7 +3,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-        Categorias
+        Inventado de Productos
         <small>Listado</small>
         </h1>
     </section>
@@ -15,7 +15,7 @@
                 <input type="hidden" id="modulo" value="almacen/categorias">
                 <div class="row">
                     <div class="col-md-12">  
-                        <a href="<?php echo base_url();?>almacen/categorias/add" class="btn btn-primary btn-flat"><span class="fa fa-plus"></span> Agregar Categoria</a>
+                        <a href="<?php echo base_url();?>inventario/productos/add" class="btn btn-primary btn-flat"><span class="fa fa-plus"></span> Agregar Inventario</a>
                     </div>
                 </div>
                 <hr>
@@ -27,27 +27,29 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Nombre</th>
+                                    <th>Stock</th>
                                     <th>Opciones</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php if(!empty($categorias)):?>
-                                    <?php foreach($categorias as $categoria):?>
+                                <?php if(!empty($productos)):?>
+                                    <?php foreach($productos as $producto):?>
                                         <tr>
-                                            <td><?php echo $categoria->id;?></td>
-                                            <td><?php echo $categoria->nombre;?></td>
+                                            <td><?php echo $producto->id;?></td>
+                                            <td><?php echo $producto->nombre;?></td>
+                                            <td><?php echo $producto->stock;?></td>
                                             <td>
                                                 <div class="btn-group">
-                                                    <button type="button" class="btn btn-info btn-view" data-toggle="modal" data-target="#modal-default" value="<?php echo $categoria->id;?>">
+                                                    <button type="button" class="btn btn-info btn-view" data-toggle="modal" data-target="#modal-default" value="<?php echo $producto->id;?>">
                                                         <span class="fa fa-search"></span>
                                                     </button>
                                                    
-                                                    <a href="<?php echo base_url()?>almacen/categorias/edit/<?php echo $categoria->id;?>" class="btn btn-warning"><span class="fa fa-pencil"></span></a>
+                                                    <a href="<?php echo base_url()?>inventario/productos/edit/<?php echo $producto->id;?>" class="btn btn-warning"><span class="fa fa-pencil"></span></a>
 
-                                                    <?php if($categoria->estado): ?>
-                                                    <a href="<?php echo base_url();?>almacen/categorias/delete/<?php echo $categoria->id;?>" class="btn btn-danger btn-remove"><span class="fa fa-remove"></span></a>
+                                                    <?php if($producto->estado): ?>
+                                                    <a href="<?php echo base_url();?>inventario/productos/delete/<?php echo $producto->id;?>" class="btn btn-danger btn-remove"><span class="fa fa-remove"></span></a>
                                                      <?php else :?>
-                                                    <a href="<?php echo base_url();?>almacen/categorias/restore/<?php echo $categoria->id;?>" class="btn btn-success btn-check"><span class="fa fa-check"></span></a>
+                                                    <a href="<?php echo base_url();?>inventario/productos/restore/<?php echo $producto->id;?>" class="btn btn-success btn-check"><span class="fa fa-check"></span></a>
                                                     <?php endif;?>
                                                     
                                                 </div>
