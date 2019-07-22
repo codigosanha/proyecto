@@ -1,0 +1,5 @@
+1-SuperAdmin
+2-Administrador
+3-Vendedor
+4-CallCenter
+5-Usuario
