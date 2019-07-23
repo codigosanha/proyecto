@@ -8,6 +8,7 @@ class Productos extends CI_Controller {
 		$this->load->model("Categorias_model");
 		$this->load->model("Inventario_model");
 		$this->load->model("Usuarios_model");
+		$this->load->model("Productos_model");
 		//if (!$this->session->userdata('username')){ 
 		//	redirect('Auth');
 	}
@@ -16,7 +17,7 @@ class Productos extends CI_Controller {
 	{
 		$usuario = $this->Usuarios_model->getSucursal($this->session->userdata("id"));
 		$data  = array(
-			'inventario' => $this->Inventario_model->getInventario($usuario->sucursal_id), 
+			'productos' => $this->Inventario_model->getInventario($usuario->sucursal_id), 
 		);
 		$this->load->view("layouts/header");
 		$this->load->view("layouts/aside");
@@ -26,41 +27,38 @@ class Productos extends CI_Controller {
 	}
 
 	public function add(){
-
+		$productos = $this->Productos_model->getProductos();
+		$usuario = $this->Usuarios_model->getSucursal($this->session->userdata("id"));
+		$productosDisponibles = array();
+		foreach ($productos as $p) {
+			$existe_producto = $this->Inventario_model->getProductoSucursal($p->id,$usuario->sucursal_id);
+			if (!$existe_producto) {
+				$productosDisponibles[] = $p;
+			}
+		}
+		$data = array(
+			"productos" => $productosDisponibles
+		);
 		$this->load->view("layouts/header");
 		$this->load->view("layouts/aside");
-		$this->load->view("admin/categorias/add");
+		$this->load->view("admin/inventario/add",$data);
 		$this->load->view("layouts/footer");
 	}
 
 	public function store(){
-
-		$nombre = $this->input->post("nombre");
-
-		$this->form_validation->set_rules("nombre","Nombre","required|is_unique[categorias.nombre]");
-		//Validaciones de los campos, campo nombre
-
-		if ($this->form_validation->run()==TRUE) {
-
-			$data  = array(
-				'nombre' => $nombre, 
-				'estado' => "1"
-			);
-
-			if ($this->Categorias_model->save($data)) { //Retorna BOOLEAN
-				redirect(base_url()."almacen/categorias");
-			}
-			else{
-				$this->session->set_flashdata("error","No se pudo guardar la informacion");
-				redirect(base_url()."almacen/categorias/add");
-			}
-		}
-		else{
-
-			$this->add(); // Llamada al metodo add para mostrar form
-		}
-
 		
+		$usuario = $this->Usuarios_model->getSucursal($this->session->userdata("id"));
+		$idProductos = $this->input->post("idProductos");
+
+		for ($i=0; $i < count($idProductos); $i++) { 
+			$data  = array(
+				"sucursal_id" => $usuario->sucursal_id,
+				"producto_id" => $idProductos[$i],
+				"stock" => 0
+			);
+			$this->Inventario_model->save($data);		
+		}
+		redirect(base_url()."inventario/productos");
 	}
 
 	public function edit($id){//Recibe el parametro id de la categoria

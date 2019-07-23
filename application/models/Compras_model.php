@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Compras_model extends CI_Model {
 
 	public function getCompras($fecha = false){
-		$this->db->select("c.*,p.nit,p.razon_social as proveedor, u.username");
+		$this->db->select("c.*,p.razon_social as proveedor, u.username");
 		$this->db->from("compras c");
 		$this->db->join("proveedores p","c.proveedor_id = p.id");
 		$this->db->join("usuarios u","c.usuario_id = u.id");
@@ -101,34 +101,15 @@ class Compras_model extends CI_Model {
 	}
 
 	public function save($data){
-		$this->db->trans_start();
-
         if ($this->db->insert("compras", $data)) {
-			$compra_id =  $this->db->insert_id();
+			return $this->db->insert_id();
 		}
-		$idproductos = $this->input->post("idproductos");
-		$cantidades = $this->input->post("cantidades");
-		$importes = $this->input->post("importes");
-		$precios = $this->input->post("precios");
-		for ($i=0; $i < count($idproductos); $i++) {
-			$dataDetalle = array(
-				"compra_id" => $compra_id,
-				"producto_id" => $idproductos[$i],
-				"precio" => $precios[$i],
-				"cantidad" => $cantidades[$i],
-				"importe" => $importes[$i]
-			); 
-			$this->db->insert("detalle_compra",$dataDetalle);
-			$this->updateStock($idproductos[$i],$cantidades[$i]);
-		}
+        return false; //everything worked
+	}
 
-        $this->db->trans_complete();
-        if($this->db->trans_status() === FALSE)
-        {
-            $this->set_flash_error();
-            return FALSE;  
-        }
-        return TRUE; //everything worked
+	public function saveDetalle($data){
+        return $this->db->insert("detalle_compra", $data);
+			
 	}
 
 	public function set_flash_error()

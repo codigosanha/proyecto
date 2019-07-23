@@ -2,18 +2,20 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Compras extends CI_Controller {
-	private $permisos;
+	//private $permisos;
 	public function __construct(){
 		parent::__construct();
-		$this->permisos = $this->backend_lib->control();
+		//$this->permisos = $this->backend_lib->control();
 		$this->load->model("Productos_model");
 		$this->load->model("Compras_model");
-
+		$this->load->model("Proveedores_model");
+		$this->load->model("Inventario_model");
+		$this->load->model("Usuarios_model");
 	}
 
 	public function index(){
 		$data  = array(
-			'permisos' => $this->permisos,
+			//'permisos' => $this->permisos,
 			'compras' => $this->Compras_model->getCompras(), 
 		);
 
@@ -26,10 +28,7 @@ class Compras extends CI_Controller {
 	public function add(){
 
 		$data = array(
-			"tipocomprobantes" => $this->Ventas_model->getComprobantes(),
-
-			"productos" => $this->Ventas_model->getProducts(),
-			"tipo_pagos" => $this->Compras_model->getTipoPagos(),
+			"proveedores" => $this->Proveedores_model->getProveedores(),
 		);
 		$this->load->view("layouts/header");
 		$this->load->view("layouts/aside");
@@ -40,8 +39,9 @@ class Compras extends CI_Controller {
 
 	//metodo para mostrar productos en la accion de asociar
 	public function getProductos(){
+		$usuario = $this->Usuarios_model->getSucursal($this->session->userdata("id"));
 		$valor = $this->input->post("valor");
-		$productos = $this->Compras_model->getProductos($valor);
+		$productos = $this->Inventario_model->searchProductos($valor,$usuario->sucursal_id);
 		echo json_encode($productos);
 	}
 
@@ -57,37 +57,29 @@ class Compras extends CI_Controller {
 	}
 
 	public function store(){
-		$comprobante = $this->input->post("comprobante");
-		$tipo_pago = $this->input->post("tipo_pago");
-		$serie = $this->input->post("serie");
-		$numero = $this->input->post("numero");
+		
 		$fecha = $this->input->post("fecha");
-		$idproveedor = $this->input->post("idproveedor");
-
-		$subtotal = $this->input->post("subtotal");
-
+		$proveedor = $this->input->post("proveedor");
 		$total = $this->input->post("total");
 
 		$idproductos = $this->input->post("idproductos");
 		$cantidades = $this->input->post("cantidades");
 		$importes = $this->input->post("importes");
-		
+		$precios = $this->input->post("precios");
 
 		$data = array(
-			'serie' => $serie,
-			'numero' => $numero,
 			'fecha' => $fecha,
-			'subtotal' => $subtotal,
-
 			'total' => $total,
-			'comprobante' => $comprobante,
-			'proveedor_id' => $idproveedor,
-			'tipo_pago_id' => $tipo_pago,
+			'proveedor_id' => $proveedor,
 			'usuario_id' => $this->session->userdata('id'),
-			'estado' => 1,
-		);
 
-		if ($this->Compras_model->save($data)) {
+		);
+		$compra = $this->Compras_model->save($data);
+		if ($compra) {
+			$usuario = $this->Usuarios_model->getSucursal($this->session->userdata("id"));
+			$this->saveDetalle($compra, $idproductos, $precios, $cantidades, $importes);
+			$this->updateStock($usuario->sucursal_id, $idproductos, $cantidades);
+
 			$this->session->set_flashdata("success", "Los datos fueron guardados exitosamente");
 			//echo "1";
 			redirect(base_url()."movimientos/compras");
@@ -96,6 +88,28 @@ class Compras extends CI_Controller {
 			$this->session->set_flashdata("error", "Los datos no fueron guardados");
 				//echo "1";
 			redirect(base_url()."movimientos/compras/add");
+		}
+	}
+	protected function saveDetalle($compra_id, $productos, $precios, $cantidades, $importes){
+		for ($i=0; $i < count($productos) ; $i++) { 
+			$dataDetalle = array(
+				"producto_id" => $productos[$i],
+				"compra_id" => $compra_id,
+				"cantidad" => $cantidades[$i],
+				"precio" =>  $precios[$i],
+				"importe" => $importes[$i],
+			);
+			$this->Compras_model->saveDetalle($dataDetalle);
+		}
+	}
+
+	protected function updateStock($sucursal_id, $productos, $cantidades){
+		for ($i=0; $i < count($productos) ; $i++) { 
+			$ps = $this->Inventario_model->getProductoSucursal($productos[$i],$sucursal_id);
+			$data = array(
+				"stock" => $ps->stock + $cantidades[$i] 
+			);
+			$this->Inventario_model->update($ps->id,$data);
 		}
 	}
 

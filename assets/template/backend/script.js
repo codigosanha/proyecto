@@ -1,4 +1,15 @@
 $(document).ready(function () {
+    $(document).on("click", ".checkProducto", function(){
+        idProducto = $(this).val();
+        if ($(this).is(":checked")) {
+            
+            input = "<input type='hidden' name='idProductos[]' value='"+idProducto+"' id='pa"+idProducto+"'>";
+            $("#productos-seleccionados").append(input);
+        }else{
+            $("#pa"+idProducto).remove();
+        }
+        
+    });
     $('.select2').select2();
     //New code
      var timeout;
@@ -213,18 +224,17 @@ $(document).ready(function () {
     function sumarCompra(){
         subtotal = 0;
         $("#tbcompras tbody tr").each(function(){
-            subtotal = subtotal + Number($(this).children("td:eq(5)").find('input').val());
+            subtotal = subtotal + Number($(this).children("td:eq(4)").find('input').val());
         });
-        $("input[name=subtotal]").val(subtotal.toFixed(2));
         $("input[name=total]").val(subtotal.toFixed(2));
     }
 
     $(document).on("keyup mouseup","#tbcompras input.cantidadesCompra", function(){
         cantidad = Number($(this).val());
-        precio = Number($(this).closest("tr").find("td:eq(3)").text());
+        precio = Number($(this).closest("tr").find("td:eq(2)").text());
         importe = cantidad * precio;
-        $(this).closest("tr").find("td:eq(5)").children("p").text(importe.toFixed(2));
-        $(this).closest("tr").find("td:eq(5)").children("input").val(importe.toFixed(2));
+        $(this).closest("tr").find("td:eq(4)").children("p").text(importe.toFixed(2));
+        $(this).closest("tr").find("td:eq(4)").children("input").val(importe.toFixed(2));
         sumarCompra();
     });
 
@@ -1045,7 +1055,6 @@ $(document).ready(function () {
             html = "<tr>";
             html +="<td><input type='hidden' name='idproductos[]' value='"+ui.item.id+"'>"+ui.item.codigo_barras+"</td>";
             html +="<td>"+ui.item.nombre+"</td>";
-            html +="<td>"+ui.item.marca+"</td>";
             html +="<td><input type='hidden' name='precios[]' value='"+ui.item.precio_compra+"'>"+ui.item.precio_compra+"</td>";
             html +="<td><input type='text' name='cantidades[]' class='cantidadesCompra' value='1'></td>";
             html +="<td><input type='hidden' name='importes[]' value='"+ui.item.precio_compra+"'><p>"+ui.item.precio_compra+"</p></td>";

@@ -22,10 +22,11 @@
                                 
                              </div>
                         <?php endif;?>
-                        <form action="<?php echo base_url();?>almacen/categorias/store" method="POST">
+                        <form action="<?php echo base_url();?>inventario/productos/store" method="POST">
                             <div class="form-group">
                                 <p>Seleccione los nuevos a inventariar</p>
-                                <table id="example1">
+                        
+                                <table id="example1" class="table table-bordered">
                                     <thead>
                                         <tr>
                                             <th></th>
@@ -39,13 +40,17 @@
                                         <?php foreach ($productos as $producto): ?>
                                             <tr>
                                                 <td>
-                                                    
+                                                    <input type="checkbox" name="checkProducto" id="<?php echo "p".$producto->id;?>" value="<?php echo $producto->id?>" class="checkProducto">
                                                 </td>
+                                                <td><?php echo $producto->cod_barras;?></td>
+                                                <td><?php echo $producto->nombre;?></td>
+                                                <td><?php echo $producto->categoria;?></td>
                                             </tr>
                                         <?php endforeach ?>
                                     </tbody>
                                 </table>
                             </div>
+                            <div id="productos-seleccionados"></div>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-success btn-flat">Guardar</button>
                                 <a href="<?php echo base_url().$this->uri->segment(1).'/'.$this->uri->segment(2); ?>" class="btn btn-danger btn-flat">Volver</a>

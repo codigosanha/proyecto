@@ -44,13 +44,6 @@
                                                         <span class="fa fa-search"></span>
                                                     </button>
                                                    
-                                                    <a href="<?php echo base_url()?>inventario/productos/edit/<?php echo $producto->id;?>" class="btn btn-warning"><span class="fa fa-pencil"></span></a>
-
-                                                    <?php if($producto->estado): ?>
-                                                    <a href="<?php echo base_url();?>inventario/productos/delete/<?php echo $producto->id;?>" class="btn btn-danger btn-remove"><span class="fa fa-remove"></span></a>
-                                                     <?php else :?>
-                                                    <a href="<?php echo base_url();?>inventario/productos/restore/<?php echo $producto->id;?>" class="btn btn-success btn-check"><span class="fa fa-check"></span></a>
-                                                    <?php endif;?>
                                                     
                                                 </div>
                                             </td>

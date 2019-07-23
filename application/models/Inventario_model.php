@@ -3,12 +3,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Inventario_model extends CI_Model {
 	public function save($data){
-		if ($this->db->insert("inventarios", $data)) {
-			return $this->db->insert_id();
-		}
-		else{
-			return false;
-		}
+		return $this->db->insert("inventario",$data);
 	}
 	public function saveDetalleInventario($data){
 		return $this->db->insert("inventario_producto", $data);
@@ -21,6 +16,20 @@ class Inventario_model extends CI_Model {
 		$this->db->where("i.sucursal_id",$sucursal);
 		$resultados = $this->db->get();
 		return $resultados->result();
+	}	
+	
+	public function getProductoSucursal($producto,$sucursal){
+		$this->db->select("p.nombre,p.cod_barras,c.nombre as categoria,p.id");
+		$this->db->from("inventario i");
+		$this->db->join("productos p", "i.producto_id = p.id");
+		$this->db->join("categorias c", "p.categoria_id = c.id");
+		$this->db->where("i.sucursal_id",$sucursal);
+		$this->db->where("i.producto_id",$producto);
+		$resultados = $this->db->get();
+		if ($resultados->num_rows() > 0) {
+			return $resultados->row();
+		}
+		return 0;
 	}	
 
 	public function getProductos($idinventario,$month,$year){
@@ -83,4 +92,20 @@ class Inventario_model extends CI_Model {
 		$resultados = $this->db->get("inventarios");
 		return $resultados->result();
 	}
+
+	public function searchProductos($valor,$sucursal){
+		$this->db->select("p.id,CONCAT(p.cod_barras,' - ',p.nombre) as label,p.nombre,p.cod_barras,p.precio_compra");
+		$this->db->from("inventario i");
+		$this->db->join("productos p", "i.producto_id = p.id");
+		$this->db->where("i.sucursal_id",$sucursal);
+		$this->db->like("CONCAT(p.cod_barras,'',p.nombre)",$valor);
+		$resultados = $this->db->get();
+		return $resultados->result_array();
+	}
+
+	public function update($id,$data){
+		$this->db->where("id",$id);
+		return $this->db->update("inventario",$data);
+	}
+
 }

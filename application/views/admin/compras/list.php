@@ -27,11 +27,7 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Fecha</th>
-                                    <th>Comprobante</th>
-                                    <th>Serie y No. Documento</th>
                                     <th>Proveedor</th>
-                                    <th>NIT</th>
-                                    <th>Tipo de Pago</th>
                                     <th>Total</th>                                   
                                     <th>Opciones</th>
                                 </tr>
@@ -42,17 +38,12 @@
                                         <tr>
                                             <td><?php echo $compra->id;?></td>
                                             <td><?php echo $compra->fecha;?></td>
-                                            <td><?php echo $compra->comprobante;?></td>
-                                            <td><?php echo $compra->serie." - ".$compra->numero;?></td>
-                                            
                                             <td><?php echo $compra->proveedor;?></td>
-                                            <td><?php echo $compra->nit;?></td>
-                                            <td><?php echo $compra->tipopago;?></td>
                                             <td><?php echo $compra->total;?></td>
 
                                             <td>
                                                 <div class="btn-group">
-                                                    <button type="button" class="btn btn-success btn-info-compra" data-toggle="modal" data-target="#modal-compra" value="<?php echo $compra->id;?>"><span class="fa fa-search"></span></button>
+                                                    <button type="button" class="btn btn-success btn-view" data-toggle="modal" data-target="#modal-compra" value="<?php echo $compra->id;?>"><span class="fa fa-search"></span></button>
                                                     
                                                 </div>
                                             </td>
