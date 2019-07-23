@@ -3,12 +3,13 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Compras_model extends CI_Model {
 
-	public function getCompras($fecha = false){
+	public function getCompras($sucursal){
 		$this->db->select("c.*,p.razon_social as proveedor, u.username");
 		$this->db->from("compras c");
 		$this->db->join("proveedores p","c.proveedor_id = p.id");
 		$this->db->join("usuarios u","c.usuario_id = u.id");
-		
+		$this->db->join("empleados e","u.empleado_id = e.id");
+		$this->db->where("e.sucursal_id",$sucursal);
 		$resultados = $this->db->get();
 		if ($resultados->num_rows() > 0) {
 			return $resultados->result();

@@ -240,8 +240,8 @@ $(document).ready(function () {
 
     $(document).on("keyup mouseup","#tbventas input.cantidadesVenta", function(){
         cantidad = $(this).val();
-        precio = Number($(this).closest("tr").find("td:eq(3)").text());
-        stock = Number($(this).closest("tr").find("td:eq(4)").text());
+        precio = Number($(this).closest("tr").find("td:eq(2)").text());
+        stock = Number($(this).closest("tr").find("td:eq(3)").text());
 
         if (cantidad!='') {
             if (cantidad == 0) {
@@ -259,8 +259,8 @@ $(document).ready(function () {
             importe = 0;
         }
 
-        $(this).closest("tr").find("td:eq(6)").children("p").text(importe.toFixed(2));
-        $(this).closest("tr").find("td:eq(6)").children("input").val(importe.toFixed(2));
+        $(this).closest("tr").find("td:eq(5)").children("p").text(importe.toFixed(2));
+        $(this).closest("tr").find("td:eq(5)").children("input").val(importe.toFixed(2));
         sumarVenta();
     });
 
@@ -353,16 +353,9 @@ $(document).ready(function () {
     function sumarVenta(){
         subtotal = 0;
         $("#tbventas tbody tr").each(function(){
-            subtotal = subtotal + Number($(this).children("td:eq(6)").find('input').val());
+            subtotal = subtotal + Number($(this).children("td:eq(5)").find('input').val());
         });
-
-        $("input[name=subtotal]").val(subtotal.toFixed(2));
-        descuento = Number($("#descuento").val());
-        porcentaje = Number($("#iva").val());
-        iva = subtotal * (porcentaje/100);
-        $("input[name=iva]").val(iva.toFixed(2));
-        total = subtotal + iva - descuento;
-        $("input[name=total]").val(total.toFixed(2));
+        $("input[name=total]").val(subtotal.toFixed(2));
     }
 
     $("#monto_recibido").on("keyup", function(){
@@ -1084,13 +1077,12 @@ $(document).ready(function () {
         minLength:2,
         select:function(event, ui){
             html = "<tr>";
-            html +="<td><input type='hidden' name='idproductos[]' value='"+ui.item.id+"'>"+ui.item.codigo_barras+"</td>";
+            html +="<td><input type='hidden' name='idproductos[]' value='"+ui.item.id+"'>"+ui.item.cod_barras+"</td>";
             html +="<td>"+ui.item.nombre+"</td>";
-            html +="<td>"+ui.item.marca+"</td>";
-            html +="<td><input type='hidden' name='precios[]' value='"+ui.item.precio_compra+"'>"+ui.item.precio_compra+"</td>";
+            html +="<td><input type='hidden' name='precios[]' value='"+ui.item.precio_venta+"'>"+ui.item.precio_venta+"</td>";
             html +="<td>"+ui.item.stock+"</td>";
             html +="<td><input type='number' name='cantidades[]' class='cantidadesVenta' value='1' onkeypress='validate(event)' required='required'></td>";
-            html +="<td><input type='hidden' name='importes[]' value='"+ui.item.precio_compra+"'><p>"+ui.item.precio_compra+"</p></td>";
+            html +="<td><input type='hidden' name='importes[]' value='"+ui.item.precio_venta+"'><p>"+ui.item.precio_venta+"</p></td>";
             html +="<td><button type='button' class='btn btn-danger btn-remove-producto-compra'><span class='fa fa-times'></span></button></td>";
             html +="</tr>"
 

@@ -2,22 +2,25 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Ventas extends CI_Controller {
-	private $permisos;
+	//private $permisos;
 	private $modulo = "Ventas";
 	public function __construct(){
 		parent::__construct();
-		$this->permisos = $this->backend_lib->control();
+		//$this->permisos = $this->backend_lib->control();
 		$this->load->model("Ventas_model");
 		$this->load->model("Clientes_model");
 		$this->load->model("Productos_model");
 		$this->load->model("Compras_model");
-		$this->load->model("Comprobante_model");
+
+		$this->load->model("Usuarios_model");
+		$this->load->model("Inventario_model");
 	}
 
 	public function index(){
+		$usuario = $this->Usuarios_model->getSucursal($this->session->userdata("id"));
 		$data  = array(
-			'permisos' => $this->permisos,
-			'ventas' => $this->Ventas_model->getVentas(), 
+			//'permisos' => $this->permisos,
+			'ventas' => $this->Ventas_model->getVentas($usuario->sucursal_id), 
 		);
 
 
@@ -30,13 +33,7 @@ class Ventas extends CI_Controller {
 	public function add(){
 
 		$data = array(
-			"tipocomprobantes" => $this->Ventas_model->getComprobantes(),
-			"tipopagos" => $this->Ventas_model->getTipoPagos(),
 			"clientes" => $this->Clientes_model->getClientes(),
-			"tipoclientes" => $this->Clientes_model->getTipoClientes(),
-			"tipodocumentos" => $this->Clientes_model->getTipoDocumentos(),
-			"estado" => "2",
-			"productos" => $this->Ventas_model->getProducts(),
 		);
 		$this->load->view("layouts/header");
 		$this->load->view("layouts/aside");
@@ -46,8 +43,9 @@ class Ventas extends CI_Controller {
 
 	//metodo para mostrar productos en la accion de asociar
 	public function getProductos(){
+		$usuario = $this->Usuarios_model->getSucursal($this->session->userdata("id"));
 		$valor = $this->input->post("valor");
-		$productos = $this->Ventas_model->getproductos($valor);
+		$productos = $this->Inventario_model->searchProductos($valor,$usuario->sucursal_id,true);
 		echo json_encode($productos);
 	}
 
@@ -63,46 +61,59 @@ class Ventas extends CI_Controller {
 	}
 
 	public function store(){
-		$fecha = $this->input->post("fecha");
-		$subtotal = $this->input->post("subtotal");
-		$iva = $this->input->post("iva");
-		$descuento = $this->input->post("descuento");
+		
+		$fecha = date("Y-m-d H:i:s");
+		$cliente = $this->input->post("cliente");
 		$total = $this->input->post("total");
-		$comprobante_id = $this->input->post("comprobante_id");
-		$tipo_pago = $this->input->post("tipo_pago");
-		$idcliente = $this->input->post("idcliente");
-		$idusuario = $this->session->userdata("id");
-		$num_documento = $this->numberDocumentGenerated($comprobante_id);
 
 		$idproductos = $this->input->post("idproductos");
-		$precios = $this->input->post("precios");
 		$cantidades = $this->input->post("cantidades");
 		$importes = $this->input->post("importes");
+		$precios = $this->input->post("precios");
 
 		$data = array(
 			'fecha' => $fecha,
-			'subtotal' => $subtotal,
-			'iva' => $iva,
-			//'iva' => $iva,
-			'descuento' => $descuento,
 			'total' => $total,
-			'tipo_comprobante_id' => $comprobante_id,
-			'cliente_id' => $idcliente,
-			'usuario_id' => $idusuario,
-			'num_documento' => $num_documento,
-			'estado' => $tipo_pago,
+			'proveedor_id' => $proveedor,
+			'usuario_id' => $this->session->userdata('id'),
+
 		);
+		$compra = $this->Compras_model->save($data);
+		if ($compra) {
+			$usuario = $this->Usuarios_model->getSucursal($this->session->userdata("id"));
+			$this->saveDetalle($compra, $idproductos, $precios, $cantidades, $importes);
+			$this->updateStock($usuario->sucursal_id, $idproductos, $cantidades);
 
-		if ($this->Ventas_model->save($data)) {
-			$idventa = $this->Ventas_model->lastID();
-			$this->updateComprobante($comprobante_id);
-			$this->save_detalle($idproductos,$idventa,$precios,$cantidades,$importes);
-			$this->backend_lib->savelog($this->modulo,"Inserción de una nueva venta con identificador ".$idventa);
-			redirect(base_url()."movimientos/ventas");
+			$this->session->set_flashdata("success", "Los datos fueron guardados exitosamente");
+			//echo "1";
+			redirect(base_url()."movimientos/compras");
+		}
+		else{
+			$this->session->set_flashdata("error", "Los datos no fueron guardados");
+				//echo "1";
+			redirect(base_url()."movimientos/compras/add");
+		}
+	}
+	protected function saveDetalle($compra_id, $productos, $precios, $cantidades, $importes){
+		for ($i=0; $i < count($productos) ; $i++) { 
+			$dataDetalle = array(
+				"producto_id" => $productos[$i],
+				"compra_id" => $compra_id,
+				"cantidad" => $cantidades[$i],
+				"precio" =>  $precios[$i],
+				"importe" => $importes[$i],
+			);
+			$this->Compras_model->saveDetalle($dataDetalle);
+		}
+	}
 
-		}else{
-			//redirect(base_url()."movimientos/ventas/add");
-			echo "0";
+	protected function updateStock($sucursal_id, $productos, $cantidades){
+		for ($i=0; $i < count($productos) ; $i++) { 
+			$ps = $this->Inventario_model->getProductoSucursal($productos[$i],$sucursal_id);
+			$data = array(
+				"stock" => $ps->stock + $cantidades[$i] 
+			);
+			$this->Inventario_model->update($ps->id,$data);
 		}
 	}
 

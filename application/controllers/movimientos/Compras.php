@@ -14,9 +14,10 @@ class Compras extends CI_Controller {
 	}
 
 	public function index(){
+		$usuario = $this->Usuarios_model->getSucursal($this->session->userdata("id"));
 		$data  = array(
 			//'permisos' => $this->permisos,
-			'compras' => $this->Compras_model->getCompras(), 
+			'compras' => $this->Compras_model->getCompras($usuario->sucursal_id), 
 		);
 
 		$this->load->view("layouts/header");

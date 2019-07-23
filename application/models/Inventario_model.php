@@ -93,12 +93,15 @@ class Inventario_model extends CI_Model {
 		return $resultados->result();
 	}
 
-	public function searchProductos($valor,$sucursal){
-		$this->db->select("p.id,CONCAT(p.cod_barras,' - ',p.nombre) as label,p.nombre,p.cod_barras,p.precio_compra");
+	public function searchProductos($valor,$sucursal,$ventas = false){
+		$this->db->select("p.id,CONCAT(p.cod_barras,' - ',p.nombre) as label,p.nombre,p.cod_barras,p.precio_compra,p.precio_venta,i.stock");
 		$this->db->from("inventario i");
 		$this->db->join("productos p", "i.producto_id = p.id");
 		$this->db->where("i.sucursal_id",$sucursal);
 		$this->db->like("CONCAT(p.cod_barras,'',p.nombre)",$valor);
+		if ($ventas) {
+			$this->db->where("i.stock >=","1");
+		}
 		$resultados = $this->db->get();
 		return $resultados->result_array();
 	}

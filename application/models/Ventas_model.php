@@ -3,15 +3,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Ventas_model extends CI_Model {
 
-	public function getVentas(){
+	public function getVentas($sucursal){
 		//$this->db->where("fecha", date("Y-m-d"));
 		//$this->db->where("estado","1");
-		$this->db->select("v.*,c.nombre,tc.nombre as tipocomprobante, u.nombres");
+		$this->db->select("v.*,c.nombres, u.username");
 		$this->db->from("ventas v");
 		$this->db->join("clientes c","v.cliente_id = c.id");
-		$this->db->join("tipo_comprobante tc","v.tipo_comprobante_id = tc.id");
 		$this->db->join("usuarios u","v.usuario_id = u.id");
-		
+		$this->db->join("empleados e","u.empleado_id = e.id");
+		$this->db->where("e.sucursal_id",$sucursal);
 		$resultados = $this->db->get();
 		if ($resultados->num_rows() > 0) {
 			return $resultados->result();
@@ -72,7 +72,7 @@ class Ventas_model extends CI_Model {
 		return $resultado->row();
 	}
 
-	public function getproductos($valor){
+	public function getProductos($valor){
 		$this->db->select("p.id,CONCAT(p.codigo_barras,' - ',p.nombre) as label,p.nombre,p.codigo_barras,p.precio_compra,m.nombre as marca,p.stock");
 		$this->db->from("productos p");
 		$this->db->join("marca m", "p.marca_id = m.id");
