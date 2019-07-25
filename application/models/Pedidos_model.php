@@ -1,17 +1,18 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Ventas_model extends CI_Model {
+class Pedidos_model extends CI_Model {
 
-	public function getVentas($sucursal){
+	public function getPedidos(){
 		//$this->db->where("fecha", date("Y-m-d"));
 		//$this->db->where("estado","1");
-		$this->db->select("v.*,c.nombres, u.username");
-		$this->db->from("ventas v");
-		$this->db->join("clientes c","v.cliente_id = c.id");
-		$this->db->join("usuarios u","v.usuario_id = u.id");
-		$this->db->join("empleados e","u.empleado_id = e.id");
-		$this->db->where("e.sucursal_id",$sucursal);
+		$this->db->select("p.*,c.nombres,s.nombre as sucursal");
+		$this->db->from("pedidos p");
+		$this->db->join("clientes c","p.cliente_id = c.id");
+		$this->db->join("sucursal s","p.sucursal_id = s.id");
+		if ($this->session->userdata("rol") == 2) {
+			$this->db->where("s.id",$this->session->userdata("sucursal_id"));
+		}
 		$resultados = $this->db->get();
 		if ($resultados->num_rows() > 0) {
 			return $resultados->result();
@@ -20,14 +21,12 @@ class Ventas_model extends CI_Model {
 			return false;
 		}
 	}
-	public function getVentasbyDate($fechainicio,$fechafin){
-		$this->db->select("v.*,c.nombre,tc.nombre as tipocomprobante, u.nombres");
-		$this->db->from("ventas v");
-		$this->db->join("clientes c","v.cliente_id = c.id");
-		$this->db->join("tipo_comprobante tc","v.tipo_comprobante_id = tc.id");
-		$this->db->join("usuarios u","v.usuario_id = u.id");
-		$this->db->where("v.fecha >=",$fechainicio);
-		$this->db->where("v.fecha <=",$fechafin);
+	public function getPedidosPendientes($sucursal){
+		$this->db->select("p.*,c.nombres as cliente");
+		$this->db->from("pedidos p");
+		$this->db->join("clientes c","p.cliente_id = c.id");
+		$this->db->where("p.sucursal_id",$sucursal);
+		$this->db->where("p.estado","0");
 		$resultados = $this->db->get();
 		if ($resultados->num_rows() > 0) {
 			return $resultados->result();
@@ -37,20 +36,20 @@ class Ventas_model extends CI_Model {
 		}
 	}
 
-	public function getVenta($id){
-		$this->db->select("v.*,c.nombres,c.telefono,c.direccion");
-		$this->db->from("ventas v");
-		$this->db->join("clientes c","v.cliente_id = c.id");
-		$this->db->where("v.id",$id);
+	public function getPedido($id){
+		$this->db->select("p.*,c.nombres,c.telefono,c.direccion");
+		$this->db->from("pedidos p");
+		$this->db->join("clientes c","p.cliente_id = c.id");
+		$this->db->where("p.id",$id);
 		$resultado = $this->db->get();
 		return $resultado->row();
 	}
 
 	public function getDetalle($id){
-		$this->db->select("dt.*,p.cod_barras,p.nombre");
-		$this->db->from("detalle_venta dt");
+		$this->db->select("dt.*,p.cod_barras,p.nombre,p.precio_venta");
+		$this->db->from("detalle_pedido dt");
 		$this->db->join("productos p","dt.producto_id = p.id");
-		$this->db->where("dt.venta_id",$id);
+		$this->db->where("dt.pedido_id",$id);
 		$resultados = $this->db->get();
 		return $resultados->result();
 	}
@@ -104,7 +103,7 @@ class Ventas_model extends CI_Model {
 	}
 
 	public function save($data){
-		if ($this->db->insert("ventas",$data)) {
+		if ($this->db->insert("pedidos",$data)) {
 			return $this->db->insert_id();
 		}
 		return false;
@@ -120,7 +119,7 @@ class Ventas_model extends CI_Model {
 	}
 
 	public function saveDetalle($data){
-        return $this->db->insert("detalle_venta", $data);
+        return $this->db->insert("detalle_pedido", $data);
 			
 	}
 
@@ -188,75 +187,9 @@ class Ventas_model extends CI_Model {
 
 	public function update($id,$data){
 		$this->db->where("id",$id);
-		return $this->db->update("ventas",$data);
+		return $this->db->update("pedidos",$data);
 	}
 
-	public function comprobarPassword($password){
-		$this->db->where("clave_permiso", $password);
-		$resultados  = $this->db->get("configuraciones");
-		if ($resultados->num_rows() > 0) {
-			return $resultados->row();
-		}
-		else{
-			return false;
-		}
-	}
-
-	public function saveNotificacion($data){
-		$this->db->insert("notificaciones",$data);
-	}
-
-	public function updateNotificacion($id,$data){
-		$this->db->where("id",$id);
-		return $this->db->update("notificaciones",$data);
-	}
-
-	public function getProducts(){
-		$this->db->select("p.*,c.nombre as categoria");
-		$this->db->from("productos p");
-		$this->db->join("categorias c","p.categoria_id = c.id");
-		$this->db->where("p.estado","1");
-		$resultados = $this->db->get();
-
-		$productos = array();
-		foreach ($resultados->result_array() as $resultado) {
-			$productos[$resultado['id']] = $resultado;
-		}
-
-		return $productos;
-	}
-
-	public function productosVendidos($fechainicio, $fechafin){
-		$this->db->select("p.id, p.nombre, p.stock, p.precio,SUM(dv.cantidad) as totalVendidos");
-		$this->db->from("detalle_venta dv");
-		$this->db->join("productos p", "dv.producto_id = p.id");
-		$this->db->join("ventas v", "dv.venta_id = v.id");
-		$this->db->where("v.fecha >=", $fechainicio);
-		$this->db->where("v.fecha <=", $fechafin);
-		$this->db->group_by("dv.producto_id");
-		$resultados = $this->db->get();
-		return $resultados->result();
-	}
-
-	public function getLastProductos(){
-		$this->db->select("p.*, c.nombre as categoria");
-		$this->db->from("productos p");
-		$this->db->join("categorias c","p.categoria_id = c.id");
-		$this->db->order_by('id',"desc");
-		$this->db->limit(5);
-		$resultados = $this->db->get();
-		return $resultados->result();
-	}
-	
-	public function getProductosStockMinimo(){
-		$this->db->select("p.*,c.nombre as categoria");
-		$this->db->from("productos p");
-		$this->db->join("categorias c","p.categoria_id = c.id");
-		$this->db->where("p.estado","1");
-		$this->db->where("stock <", 10);
-		$resultados = $this->db->get();
-		return $resultados->result();
-	}
 
 	public function getProductosmasVendidos(){
 		$this->db->select("p.id, p.codigo_barras, p.nombre, p.stock, p.precio,SUM(dv.cantidad) as totalVendidos, c.nombre as categoria");

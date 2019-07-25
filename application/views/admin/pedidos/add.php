@@ -3,8 +3,8 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-        Ventas
-        <small>Nueva</small>
+        Pedidos
+        <small>Nuevo</small>
         </h1>
     </section>
     <!-- Main content -->
@@ -12,13 +12,22 @@
         <!-- Default box -->
         <div class="box box-solid">
             <div class="box-body">
-                 <form action="<?php echo base_url();?>movimientos/ventas/store" method="POST">
+                 <form action="<?php echo base_url();?>movimientos/pedidos/store" method="POST">
                     <div class="row">
                         <!--Inicio Primer Columna-->
                         <div class="col-md-9">
-                            <input type="hidden" name="sucursal" id="sucursal" value="<?php echo $usuario->sucursal_id;?>">
-                            <input type="hidden" id="modulo" value="movimientos/ventas">
-                            <input type="hidden" id="pedido" name="pedido" value="0">
+                            <!-- <input type="hidden" name="sucursal" id="sucursal" value="<?php echo $usuario->sucursal_id;?>"> -->
+                            
+                            <input type="hidden" id="modulo" value="movimientos/pedidos">
+                            <div class="form-group">
+                                <label for="">Sucursal</label>
+                                <select name="sucursal" id="sucursal" class="form-control">
+                                    <option value="">Seleccione...</option>
+                                    <?php foreach ($sucursales as $sucursal): ?>
+                                        <option value="<?php echo $sucursal->id;?>"><?php echo $sucursal->nombre; ?></option>
+                                    <?php endforeach ?>
+                                </select>
+                            </div>
                             <div class="form-group">
                                 <label for="">Producto:</label>
                                 <div class="input-group barcode">
@@ -59,7 +68,15 @@
                                     <?php endforeach ?>
                                     
                                 </select>
-                            </div>       
+                            </div> 
+                            <div class="form-group">            
+                                <label for="">Fecha de Registro:</label>
+                                <input type="date" class="form-control" name="fecha_registro" value="<?php echo date("Y-m-d");?>" required>
+                            </div>          
+                            <div class="form-group">            
+                                <label for="">Fecha de Entrega:</label>
+                                <input type="date" class="form-control" name="fecha_entrega" value="<?php echo date("Y-m-d");?>" required>
+                            </div>    
                             <div class="form-group">              
                                 <div class="input-group">
                                     <span class="input-group-addon">Total:</span>
@@ -85,55 +102,3 @@
 
 </div>
 <!-- /.content-wrapper -->
-
-<div class="modal fade" id="modal-pedidos">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Lista de Pedidos Pendientes</h4>
-      </div>
-      <div class="modal-body">
-        <table class="table table-bordered" id="example1">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Cliente</th>
-                    <th>Fecha de Registro</th>
-                    <th>Fecha de Entrega</th>
-                    <th>Total</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php print_r($pedidos);?>
-                <?php if (!empty($pedidos)): ?>
-                    <?php foreach ($pedidos as $pedido): ?>
-                        <tr>
-                            <td><?php echo $pedido->id; ?></td>
-                            <td><?php echo $pedido->cliente; ?></td>
-                            <td><?php echo $pedido->fecha; ?></td>
-                            <td><?php echo $pedido->fecha_entrega; ?></td>
-                            <td><?php echo $pedido->total; ?></td>
-                            <td>
-                                <button type="button" class="btn btn-success btn-select-pedido" value='<?php echo json_encode($pedido);?>'>
-                                    <span class="fa fa-check"></span>
-                                </button>
-                            </td>
-                        </tr>
-                    <?php endforeach ?>
-                <?php endif ?>
-            </tbody>
-        </table>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary btn-flat btn-print"><span class="fa fa-print"></span> Imprimir</button>
-      </div>
-    </div>
-    <!-- /.modal-content -->
-  </div>
-  <!-- /.modal-dialog -->
-</div>
-<!-- /.modal -->

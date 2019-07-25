@@ -11,16 +11,16 @@ class Ventas extends CI_Controller {
 		$this->load->model("Clientes_model");
 		$this->load->model("Productos_model");
 		$this->load->model("Compras_model");
-
+		$this->load->model("Pedidos_model");
 		$this->load->model("Usuarios_model");
 		$this->load->model("Inventario_model");
 	}
 
 	public function index(){
-		$usuario = $this->Usuarios_model->getSucursal($this->session->userdata("id"));
+		
 		$data  = array(
 			//'permisos' => $this->permisos,
-			'ventas' => $this->Ventas_model->getVentas($usuario->sucursal_id), 
+			'ventas' => $this->Ventas_model->getVentas($this->session->userdata("sucursal_id")), 
 		);
 
 
@@ -31,9 +31,11 @@ class Ventas extends CI_Controller {
 	}
 
 	public function add(){
-
+		$usuario = $this->Usuarios_model->getSucursal($this->session->userdata("id"));
+		
 		$data = array(
 			"clientes" => $this->Clientes_model->getClientes(),
+			"usuario" => $usuario,
 		);
 		$this->load->view("layouts/header");
 		$this->load->view("layouts/aside");
@@ -43,9 +45,9 @@ class Ventas extends CI_Controller {
 
 	//metodo para mostrar productos en la accion de asociar
 	public function getProductos(){
-		$usuario = $this->Usuarios_model->getSucursal($this->session->userdata("id"));
+		
 		$valor = $this->input->post("valor");
-		$productos = $this->Inventario_model->searchProductos($valor,$usuario->sucursal_id,true);
+		$productos = $this->Inventario_model->searchProductos($valor,$this->session->userdata("sucursal_id"),true);
 		echo json_encode($productos);
 	}
 
@@ -74,36 +76,36 @@ class Ventas extends CI_Controller {
 		$data = array(
 			'fecha' => $fecha,
 			'total' => $total,
-			'proveedor_id' => $proveedor,
+			'cliente_id' => $cliente,
 			'usuario_id' => $this->session->userdata('id'),
-
+			'estado' => "1"
 		);
-		$compra = $this->Compras_model->save($data);
-		if ($compra) {
+		$venta = $this->Ventas_model->save($data);
+		if ($venta) {
 			$usuario = $this->Usuarios_model->getSucursal($this->session->userdata("id"));
-			$this->saveDetalle($compra, $idproductos, $precios, $cantidades, $importes);
+			$this->saveDetalle($venta, $idproductos, $precios, $cantidades, $importes);
 			$this->updateStock($usuario->sucursal_id, $idproductos, $cantidades);
 
 			$this->session->set_flashdata("success", "Los datos fueron guardados exitosamente");
 			//echo "1";
-			redirect(base_url()."movimientos/compras");
+			redirect(base_url()."movimientos/ventas");
 		}
 		else{
 			$this->session->set_flashdata("error", "Los datos no fueron guardados");
 				//echo "1";
-			redirect(base_url()."movimientos/compras/add");
+			redirect(base_url()."movimientos/ventas/add");
 		}
 	}
-	protected function saveDetalle($compra_id, $productos, $precios, $cantidades, $importes){
+	protected function saveDetalle($venta_id, $productos, $precios, $cantidades, $importes){
 		for ($i=0; $i < count($productos) ; $i++) { 
 			$dataDetalle = array(
 				"producto_id" => $productos[$i],
-				"compra_id" => $compra_id,
+				"venta_id" => $venta_id,
 				"cantidad" => $cantidades[$i],
 				"precio" =>  $precios[$i],
 				"importe" => $importes[$i],
 			);
-			$this->Compras_model->saveDetalle($dataDetalle);
+			$this->Ventas_model->saveDetalle($dataDetalle);
 		}
 	}
 
@@ -111,7 +113,7 @@ class Ventas extends CI_Controller {
 		for ($i=0; $i < count($productos) ; $i++) { 
 			$ps = $this->Inventario_model->getProductoSucursal($productos[$i],$sucursal_id);
 			$data = array(
-				"stock" => $ps->stock + $cantidades[$i] 
+				"stock" => $ps->stock - $cantidades[$i] 
 			);
 			$this->Inventario_model->update($ps->id,$data);
 		}

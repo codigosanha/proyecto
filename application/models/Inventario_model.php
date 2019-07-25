@@ -19,7 +19,7 @@ class Inventario_model extends CI_Model {
 	}	
 	
 	public function getProductoSucursal($producto,$sucursal){
-		$this->db->select("p.nombre,p.cod_barras,c.nombre as categoria,p.id");
+		$this->db->select("p.nombre,p.cod_barras,c.nombre as categoria,p.id,i.stock,i.id as idinv");
 		$this->db->from("inventario i");
 		$this->db->join("productos p", "i.producto_id = p.id");
 		$this->db->join("categorias c", "p.categoria_id = c.id");

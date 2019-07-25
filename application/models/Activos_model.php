@@ -7,7 +7,7 @@ class Activos_model extends CI_Model {
 		$this->db->select("a.*,e.nombre as empleado");
 		$this->db->from("activos a");
 		$this->db->join("empleados e","a.empleado_id = e.id");
-
+		$this->db->where("e.sucursal",$this->session->userdata("sucursal_id"));
 		$resultados = $this->db->get();
 		return $resultados->result();
 	}

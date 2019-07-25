@@ -4,8 +4,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Sucursales_model extends CI_Model {
 
 	public function getSucursales(){
-		//$this->db->where("estado","1");
-		$resultados = $this->db->get("sucursal");
+		$this->db->select("s.*, d.nombre as departamento");
+		$this->db->from("sucursal s");
+		$this->db->join("departamentos d", "s.departamento_id = d.id");
+		$resultados = $this->db->get();
 		return $resultados->result();
 	}
 

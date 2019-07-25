@@ -15,9 +15,9 @@ class Productos extends CI_Controller {
 
 	public function index()
 	{
-		$usuario = $this->Usuarios_model->getSucursal($this->session->userdata("id"));
+		
 		$data  = array(
-			'productos' => $this->Inventario_model->getInventario($usuario->sucursal_id), 
+			'productos' => $this->Inventario_model->getInventario($this->session->userdata("sucursal_id")), 
 		);
 		$this->load->view("layouts/header");
 		$this->load->view("layouts/aside");
@@ -28,10 +28,9 @@ class Productos extends CI_Controller {
 
 	public function add(){
 		$productos = $this->Productos_model->getProductos();
-		$usuario = $this->Usuarios_model->getSucursal($this->session->userdata("id"));
 		$productosDisponibles = array();
 		foreach ($productos as $p) {
-			$existe_producto = $this->Inventario_model->getProductoSucursal($p->id,$usuario->sucursal_id);
+			$existe_producto = $this->Inventario_model->getProductoSucursal($p->id,$this->session->userdata("sucursal_id"));
 			if (!$existe_producto) {
 				$productosDisponibles[] = $p;
 			}
@@ -47,12 +46,11 @@ class Productos extends CI_Controller {
 
 	public function store(){
 		
-		$usuario = $this->Usuarios_model->getSucursal($this->session->userdata("id"));
 		$idProductos = $this->input->post("idProductos");
 
 		for ($i=0; $i < count($idProductos); $i++) { 
 			$data  = array(
-				"sucursal_id" => $usuario->sucursal_id,
+				"sucursal_id" => $this->session->userdata("sucursal_id"),
 				"producto_id" => $idProductos[$i],
 				"stock" => 0
 			);

@@ -54,7 +54,7 @@
         .navbar-nav>.notifications-menu>.dropdown-menu>li .menu>li>a, .navbar-nav>.messages-menu>.dropdown-menu>li .menu>li>a, .navbar-nav>.tasks-menu>.dropdown-menu>li .menu>li>a{
             white-space: normal;
         }
-        #modal-venta .modal-dialog{
+        #modal-venta .modal-dialog,#modal-pedido .modal-dialog{
             width: 310px !important;
         }       
         .contenido{
@@ -131,6 +131,7 @@
                  <span text-align="center" class="hidden-xs"><?php echo $this->session->userdata("nombre")?></span>  
                 </p>
                  <p><small>Sistema de Farmacia</small></p>
+                 <p><small>Sucursal: <?php echo $this->session->userdata("sucursal_name");?></small></p>
                 <br>
                  <li class="user-footer">
                 <div class="pull-right">
@@ -146,3 +147,4 @@
                 </div>
             </nav>
         </header>
+        

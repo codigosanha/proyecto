@@ -7,15 +7,13 @@
         Km 168.7 Ruta a Chiché,
         Santa Cruz del Quiche
     </div>
-    <div class="form-group text-center">
-        <label for="">Numero de Documento</label><br>
-        <?php echo  "A01 - ".str_pad($venta->id, 6, "0", STR_PAD_LEFT)?>
-    </div>
     <div class="form-group">
-        <p><b>Cliente: </b><?php echo $venta->nombres;?></p>
-        <p><b>Direccion: </b><?php echo $venta->direccion;?></p>
-        <p><b>Telefono: </b><?php echo $venta->telefono;?></p>
-        <p><b>Fecha: </b><?php echo $venta->fecha;?></p>
+        <p><b>Cliente: </b><?php echo $pedido->nombres;?></p>
+        <p><b>Direccion: </b><?php echo $pedido->direccion;?></p>
+        <p><b>Telefono: </b><?php echo $pedido->telefono;?></p>
+        <p><b>Fecha Registro: </b><?php echo $pedido->fecha;?></p>
+        <p><b>Fecha Entrega: </b><?php echo $pedido->fecha_entrega;?></p>
+        <p><b>Estado del Pedido: </b><?php echo $pedido->estado == 1?'Entregado':'Pendiente';?></p>
     </div>
 
     <div class="form-group">
@@ -41,17 +39,17 @@
             <tfoot>
                 <tr>
                     <th colspan="2">TOTAL:</th>
-                    <th style="text-align: right;"><?php echo $venta->total;?></th>
+                    <th style="text-align: right;"><?php echo $pedido->total;?></th>
                 </tr>
             </tfoot>
         </table>
     </div>
-    <div class="form-group text-center">
-        <p>Gracias por su preferencia</p>
-        <p>Este comprobante <strong>no</strong> es una <strong>Factura</strong></p>
-        <p>Por favor exija su factura en caja</p>
-        <p>Recuerda visitarnos en:</p>
-        <p><i class="fa fa-globe"> www.tallereselpunto.gt</i></p>
-        <p><i class="fa fa-facebook-square"> Talleres El Punto</i></p>
+    <div class="form-group">
+        <?php if (!$pedido->estado): ?>
+            <a href="<?php echo base_url();?>movimientos/pedidos/finalizarPedido/<?php echo $pedido->id;?>" class="btn btn-success btn-block">Finalizar Pedido</a>
+        <?php endif ?>
+        
+        
     </div>
+
 </div>

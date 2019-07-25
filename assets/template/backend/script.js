@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    
     $(document).on("click", ".checkProducto", function(){
         idProducto = $(this).val();
         if ($(this).is(":checked")) {
@@ -92,7 +93,7 @@ $(document).ready(function () {
         });
     });
 
-    $(".btn-info-venta").on("click", function(){
+    $(".btn-view-venta").on("click", function(){
         idVenta = $(this).val();
         $.ajax({
             url:base_url + "movimientos/ventas/view",
@@ -100,6 +101,17 @@ $(document).ready(function () {
             data: {id:idVenta},
             success:function(resp){
                 $("#modal-venta .modal-body").html(resp);
+            }
+        });
+    });
+    $(".btn-view-pedido").on("click", function(){
+        idPedido = $(this).val();
+        $.ajax({
+            url:base_url + "movimientos/pedidos/view",
+            type: "POST",
+            data: {id:idPedido},
+            success:function(resp){
+                $("#modal-pedido .modal-body").html(resp);
             }
         });
     });
@@ -1064,11 +1076,13 @@ $(document).ready(function () {
 
     $("#searchProductoVenta").autocomplete({
         source:function(request, response){
+            var sucursal = $("#sucursal").val();
+            var modulo = $("#modulo").val();
             $.ajax({
-                url: base_url+"movimientos/ventas/getProductos",
+                url: base_url+modulo+"/getProductos",
                 type: "POST",
                 dataType:"json",
-                data:{ valor: request.term},
+                data:{ valor: request.term, sucursal:sucursal},
                 success:function(data){
                     response(data);
                 }

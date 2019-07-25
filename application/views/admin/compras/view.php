@@ -20,8 +20,7 @@
                         <td><?php echo $compra->nit;?></td>
                         <th>Comprobante:</th>
                         <td colspan="2"><?php echo $compra->comprobante;?></td>
-                        <th>Tipo Pago</th>
-                        <td><?php echo $compra->tipopago;?></td>
+                        
                     </tr>
                     <tr>
                         <th>Direccion:</th>

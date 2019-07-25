@@ -7,6 +7,7 @@ class Empleados_model extends CI_Model {
 		$this->db->select("e.*,sc.nombre as sucursal");
 		$this->db->from("empleados e");
 		$this->db->join("sucursal sc", "e.sucursal_id = sc.id");
+		$this->db->where("sc.id",$this->session_userdata("sucursal_id"));
 		$resultados = $this->db->get();
 		return $resultados->result();
 	}

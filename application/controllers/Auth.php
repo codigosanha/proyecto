@@ -6,6 +6,7 @@ class Auth extends CI_Controller {
 	public function __construct(){
 		parent::__construct();
 		$this->load->model("Usuarios_model");//Referencia a la clase Auth $this-->
+		$this->load->model("Sucursales_model");
 	}
 	public function index()
 	{
@@ -30,17 +31,38 @@ class Auth extends CI_Controller {
 			echo "0";//error en la comprobacion de los datos del usuario
 		}
 		else{
-			$data  = array(
-				//variables de sesion
-				'id' => $res->id, 
-				'username' => $res->username,
-				'rol' => $res->rol,
-				'login' => TRUE
-			);
+			$data['id'] = $res->id;
+			$data['username'] = $res->username;
+			$data['rol'] = $res->rol;
+			$data['login'] = TRUE;
+			if ($res->rol != 1) {
+				$infoUsuario = $this->Usuarios_model->getSucursal($res->id);
+				$infoSucursal = $this->Sucursales_model->getSucursal($infoUsuario->sucursal_id);
+				$data['sucursal_id'] = $infoUsuario->sucursal_id;
+				$data['sucursal_name'] = $infoSucursal->nombre;
+			}
+
+			//colocar las rutas
+			
 			$this->session->set_userdata($data);
 			//$this->backend_lib->savelog($this->modulo,"Inicio de sesión");
 			//redirect(base_url()."dashboard");
-			echo "1";//exito en la comprobacion de los datos del usuario
+			//echo "1";//exito en la comprobacion de los datos del usuario
+			switch ($res->rol) {
+				case '1':
+					echo "dashboard";
+					break;
+				case '2':
+					echo "movimientos/pedidos";
+					break;
+				case '3':
+					echo "movimientos/compras";
+					break;
+				
+				default:
+					echo "movimientos/ventas";
+					break;
+			}
 		}
 	}
 

@@ -9,7 +9,7 @@ class Compras_model extends CI_Model {
 		$this->db->join("proveedores p","c.proveedor_id = p.id");
 		$this->db->join("usuarios u","c.usuario_id = u.id");
 		$this->db->join("empleados e","u.empleado_id = e.id");
-		$this->db->where("e.sucursal_id",$sucursal);
+		$this->db->where("c.sucursal_id",$sucursal);
 		$resultados = $this->db->get();
 		if ($resultados->num_rows() > 0) {
 			return $resultados->result();
@@ -36,10 +36,9 @@ class Compras_model extends CI_Model {
 	}
 
 	public function getCompra($id){
-		$this->db->select("c.*,p.razon_social as proveedor,p.nit,p.direccion,tp.nombre as tipopago");
+		$this->db->select("c.*,p.razon_social as proveedor,p.nit,p.direccion");
 		$this->db->from("compras c");
-		$this->db->join("proveedor p","c.proveedor_id = p.id");
-		$this->db->join("tipo_pago tp","c.tipo_pago_id = tp.id");
+		$this->db->join("proveedores p","c.proveedor_id = p.id");
 		$this->db->where("c.id",$id);
 		$resultados = $this->db->get();
 		if ($resultados->num_rows() > 0) {
@@ -51,7 +50,7 @@ class Compras_model extends CI_Model {
 	}
 
 	public function getDetalle($id){
-		$this->db->select("dc.*,p.codigo_barras,p.nombre,p.stock");
+		$this->db->select("dc.*,p.cod_barras,p.nombre");
 		$this->db->from("detalle_compra dc");
 		$this->db->join("productos p","dc.producto_id = p.id");
 		$this->db->where("dc.compra_id",$id);

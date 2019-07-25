@@ -84,7 +84,7 @@
                 showConfirmButton: false,
                 type: 'success'
             });
-          window.location.href = base_url + "dashboard";
+          window.location.href = base_url + resp;
         }
       }
     });

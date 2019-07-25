@@ -8,7 +8,7 @@ class Dashboard extends CI_Controller {
 		if (!$this->session->userdata("login")) {
 			redirect(base_url());
 		}
-		//$this->load->model("Ventas_model");
+		$this->load->model("Sucursales_model");
 
 	}
 	public function index()
@@ -24,13 +24,37 @@ class Dashboard extends CI_Controller {
 				'pstockminimo' => $this->Ventas_model->getProductosStockMinimo(),
 		);
 */
-		$this->load->view("layouts/header");
-		$this->load->view("layouts/aside");
-		$this->load->view("admin/dashboard");
-		$this->load->view("layouts/footer");
+		if (!$this->session->userdata("sucursal_id")) {
+			$this->viewSeleccion();
+		}else{
+			$this->load->view("layouts/header");
+			$this->load->view("layouts/aside");
+			$this->load->view("admin/dashboard");
+			$this->load->view("layouts/footer");
+		}
+		
 
 		//echo 'view/dashboard';
 	}
+
+	public function viewSeleccion(){
+		$this->session->unset_userdata('sucursal_id');
+		$this->session->unset_userdata('sucursal_name');
+		$data =array(
+			"sucursales" => $this->Sucursales_model->getSucursales()
+		);
+		$this->load->view("admin/sucursales/seleccion",$data);
+	}
+
+	public function setSucursal($idSucursal){
+		$infoSucursal = $this->Sucursales_model->getSucursal($idSucursal);
+		$data['sucursal_id'] = $idSucursal;
+		$data['sucursal_name'] = $infoSucursal->nombre;
+		$this->session->set_userdata($data);
+		redirect(base_url()."dashboard");
+	}
+
+
 
 	/*public function getData(){
 		$year = $this->input->post("year");

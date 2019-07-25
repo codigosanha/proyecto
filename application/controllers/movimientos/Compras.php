@@ -14,10 +14,10 @@ class Compras extends CI_Controller {
 	}
 
 	public function index(){
-		$usuario = $this->Usuarios_model->getSucursal($this->session->userdata("id"));
+		
 		$data  = array(
 			//'permisos' => $this->permisos,
-			'compras' => $this->Compras_model->getCompras($usuario->sucursal_id), 
+			'compras' => $this->Compras_model->getCompras($this->session->userdata("sucursal_id")), 
 		);
 
 		$this->load->view("layouts/header");
@@ -40,9 +40,9 @@ class Compras extends CI_Controller {
 
 	//metodo para mostrar productos en la accion de asociar
 	public function getProductos(){
-		$usuario = $this->Usuarios_model->getSucursal($this->session->userdata("id"));
+		
 		$valor = $this->input->post("valor");
-		$productos = $this->Inventario_model->searchProductos($valor,$usuario->sucursal_id);
+		$productos = $this->Inventario_model->searchProductos($valor,$this->session->userdata("sucursal_id"));
 		echo json_encode($productos);
 	}
 
@@ -68,18 +68,19 @@ class Compras extends CI_Controller {
 		$importes = $this->input->post("importes");
 		$precios = $this->input->post("precios");
 
+
 		$data = array(
 			'fecha' => $fecha,
 			'total' => $total,
 			'proveedor_id' => $proveedor,
 			'usuario_id' => $this->session->userdata('id'),
+			'sucursal_id' => $this->session->userdata('sucursal_id')
 
 		);
 		$compra = $this->Compras_model->save($data);
 		if ($compra) {
-			$usuario = $this->Usuarios_model->getSucursal($this->session->userdata("id"));
 			$this->saveDetalle($compra, $idproductos, $precios, $cantidades, $importes);
-			$this->updateStock($usuario->sucursal_id, $idproductos, $cantidades);
+			$this->updateStock($this->session->userdata("sucursal_id"), $idproductos, $cantidades);
 
 			$this->session->set_flashdata("success", "Los datos fueron guardados exitosamente");
 			//echo "1";
@@ -110,7 +111,7 @@ class Compras extends CI_Controller {
 			$data = array(
 				"stock" => $ps->stock + $cantidades[$i] 
 			);
-			$this->Inventario_model->update($ps->id,$data);
+			$this->Inventario_model->update($ps->idinv,$data);
 		}
 	}
 
