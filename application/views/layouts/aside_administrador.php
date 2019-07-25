@@ -48,6 +48,19 @@
             <li><a href="<?php echo base_url();?>mantenimiento/departamentos"><i class="fa fa-circle-o"></i> Departamentos</a></li>
           </ul>
         </li>
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-cog"></i>
+            <span>Planilla</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="<?php echo base_url();?>planilla/pagos"><i class="fa fa-circle-o"></i> Pagos</a></li>
+            <li><a href="<?php echo base_url();?>mantenimiento/empleados"><i class="fa fa-circle-o"></i> Empleados</a></li>
+          </ul>
+        </li>
 
          <li class="treeview">
           <a href="#">

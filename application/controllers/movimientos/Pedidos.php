@@ -47,9 +47,9 @@ class Pedidos extends CI_Controller {
 
 	//metodo para mostrar productos en la accion de asociar
 	public function getProductos(){
-		
+		$sucursal = $this->input->post("sucursal");
 		$valor = $this->input->post("valor");
-		$productos = $this->Inventario_model->searchProductos($valor,$this->session->userdata("sucursal_id"),true);
+		$productos = $this->Inventario_model->searchProductos($valor,$sucursal,true);
 		echo json_encode($productos);
 	}
 

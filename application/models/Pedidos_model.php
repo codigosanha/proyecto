@@ -10,7 +10,7 @@ class Pedidos_model extends CI_Model {
 		$this->db->from("pedidos p");
 		$this->db->join("clientes c","p.cliente_id = c.id");
 		$this->db->join("sucursal s","p.sucursal_id = s.id");
-		if ($this->session->userdata("rol") == 2) {
+		if ($this->session->userdata("rol") != 2) {
 			$this->db->where("s.id",$this->session->userdata("sucursal_id"));
 		}
 		$resultados = $this->db->get();

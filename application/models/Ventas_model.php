@@ -11,7 +11,7 @@ class Ventas_model extends CI_Model {
 		$this->db->join("clientes c","v.cliente_id = c.id");
 		$this->db->join("usuarios u","v.usuario_id = u.id");
 		$this->db->join("empleados e","u.empleado_id = e.id");
-		$this->db->where("e.sucursal_id",$sucursal);
+		$this->db->where("v.sucursal_id",$sucursal);
 		$resultados = $this->db->get();
 		if ($resultados->num_rows() > 0) {
 			return $resultados->result();
