@@ -1,0 +1,38 @@
+Productos
+Añadir imagen y codigo de productos
+
+Pedidos:
+acceso para dependiente de framacia y admin, estos puede finalizar el pedido
+
+el callcenter solo puede registrar
+
+Mostrar Hora en  el ticket de pedido
+
+Ventas: 
+Generar ticket al final de la venta
+Busqueda por barcode
+
+
+Compras: 
+Busqueda barcode
+
+Roles:
+Bodeguero acceso a inventario
+
+Reportes:
+ventas, compras, activos,planillas
+
+Inventario:
+Agregar la opcionde  ajuste
+
+
+Borrar functions de los controllers y modelos
+Agregar Menu Pagos/planillas 
+
+No permitir acceso al panel sin haberse logueado
+
+Dashboard:
+Reporte de mes no muestra grafica
+Reporte de dias muestra por id
+
+
