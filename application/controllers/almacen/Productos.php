@@ -7,11 +7,13 @@ class Productos extends CI_Controller {
 
 	public function __construct(){
 		parent::__construct();
-
+		if (!$this->session->userdata("login")) {
+			redirect(base_url());
+		}
 		$this->load->model("Productos_model");
 		$this->load->model("Categorias_model");
 		$this->load->model("Ventas_model");
-		$this->load->model("Presentacion_model");
+		$this->load->model("Presentaciones_model");
 		$this->load->model("Marcas_model");
 	}
 
@@ -33,7 +35,7 @@ class Productos extends CI_Controller {
 		$data =array( 
 			"categorias" => $this->Categorias_model->getCategorias(),
 			"productos" => $this->Productos_model->getProductos(),
-			"presentaciones" => $this->Presentacion_model->getPresentaciones(),
+			"presentaciones" => $this->Presentaciones_model->getPresentaciones(),
 			"marcas" => $this->Marcas_model->getMarcas(),
 		);
 		$this->load->view("layouts/header");
@@ -58,7 +60,18 @@ class Productos extends CI_Controller {
 
 
 		if ($this->form_validation->run()==TRUE) {
-			
+			$imagen = 'image_default.jpg';
+			if (!empty($_FILES['imagen']['name'])) {
+				$config['upload_path']          = './assets/imagenes_productos/';
+                $config['allowed_types']        = 'gif|jpg|png';
+
+                $this->load->library('upload', $config);
+                if ($this->upload->do_upload('imagen'))
+                {
+  					$data = array('upload_data' => $this->upload->data());
+                    $imagen = $data['upload_data']['file_name'];
+                } 
+			}
             $data  = array(
 				'cod_barras' => $cod_barras,
 				'nombre' => $nombre,
@@ -69,6 +82,7 @@ class Productos extends CI_Controller {
 				"marca_id" => $marca,
 				"presentacion_id" => $presentacion,
 				'estado' => "1",
+				'imagen' => $imagen
 			);
 			// $producto_id = $this->Productos_model->save($data);
 			// if ($producto_id != false) {
@@ -90,6 +104,7 @@ class Productos extends CI_Controller {
 			// 	redirect(base_url()."mantenimiento/productos");
 			// }
             if ($this->Productos_model->save($data)){
+            	$this->generateBarCode($cod_barras);
             	redirect(base_url()."almacen/productos");
             }
 			else{
@@ -108,7 +123,7 @@ class Productos extends CI_Controller {
 		$data =array( 
 			"producto" => $this->Productos_model->getProducto($id),
 			"categorias" => $this->Categorias_model->getCategorias(),
-			"presentaciones" => $this->Presentacion_model->getPresentaciones(),
+			"presentaciones" => $this->Presentaciones_model->getPresentaciones(),
 			"marcas" => $this->Marcas_model->getMarcas(),
 		);
 		$this->load->view("layouts/header");
@@ -143,6 +158,20 @@ class Productos extends CI_Controller {
 		
 
 		if ($this->form_validation->run()) {
+			$producto = $this->Productos_model->getProducto($idproducto);
+			$imagen = $producto->imagen;
+			if (!empty($_FILES['imagen']['name'])) {
+				$config['upload_path']          = './assets/imagenes_productos/';
+                $config['allowed_types']        = 'gif|jpg|png';
+
+                $this->load->library('upload', $config);
+                if ($this->upload->do_upload('imagen'))
+                {
+  					$data = array('upload_data' => $this->upload->data());
+                    $imagen = $data['upload_data']['file_name'];
+                    unlink("assets/imagenes_productos/".$producto->imagen);
+                } 
+			}
 
 			$data  = array(
 				'cod_barras' => $cod_barras,
@@ -153,11 +182,12 @@ class Productos extends CI_Controller {
 				'categoria_id' => $categoria,
 				"marca_id" => $marca,
 				"presentacion_id" => $presentacion,
+				"imagen" => $imagen
 				
 			);
 			if ($this->Productos_model->update($idproducto,$data)) {
 
-				//$this->generateBarCode($cod_barras);
+				$this->generateBarCode($cod_barras);
 				
 				
 				redirect(base_url()."almacen/productos");

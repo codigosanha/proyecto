@@ -9,6 +9,22 @@ class Inventario_model extends CI_Model {
 		return $this->db->insert("inventario_producto", $data);
 	}
 
+	public function getProductoByCode($codigo_barra){
+		$this->db->select("p.id,p.nombre,p.cod_barras,p.precio_compra,p.precio_venta,i.stock");
+		$this->db->from("inventario i");
+		$this->db->join("productos p", "i.producto_id = p.id");
+		$this->db->where("p.cod_barras", $codigo_barra);
+		$this->db->where("i.sucursal_id", $this->session->userdata("sucursal_id"));
+		$resultados = $this->db->get();
+		if ($resultados->num_rows() > 0) {
+			return $resultados->row();
+		}else{
+			return false;
+		}
+		
+	}
+
+
 	public function getInventario($sucursal){
 		$this->db->select("p.nombre, i.*");
 		$this->db->from("inventario i");
@@ -108,6 +124,12 @@ class Inventario_model extends CI_Model {
 
 	public function update($id,$data){
 		$this->db->where("id",$id);
+		return $this->db->update("inventario",$data);
+	}
+
+	public function updateStock($producto,$sucursal,$data){
+		$this->db->where("producto_id",$producto);
+		$this->db->where("sucursal_id",$sucursal);
 		return $this->db->update("inventario",$data);
 	}
 

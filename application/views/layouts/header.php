@@ -54,7 +54,7 @@
         .navbar-nav>.notifications-menu>.dropdown-menu>li .menu>li>a, .navbar-nav>.messages-menu>.dropdown-menu>li .menu>li>a, .navbar-nav>.tasks-menu>.dropdown-menu>li .menu>li>a{
             white-space: normal;
         }
-        #modal-venta .modal-dialog,#modal-pedido .modal-dialog{
+        #modal-venta .modal-dialog,#modal-pedido .modal-dialog,#modal-ajuste .modal-dialog{
             width: 310px !important;
         }       
         .contenido{

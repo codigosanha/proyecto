@@ -4,16 +4,21 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Usuarios_model extends CI_Model {
 
 	public function getUsuarios(){
-		$this->db->where("estado","1");
-		$resultados = $this->db->get("usuarios");
-		return $resultados->result();//Devolver conjunto de varios registros
+		$this->db->select("u.*,e.nombre,e.apellido");
+		$this->db->from("usuarios u");
+		$this->db->join("empleados e","u.empleado_id = e.id");
+		$this->db->where("e.sucursal_id",$this->session->userdata("sucursal_id"));
+		$resultado = $this->db->get();
+		return $resultado->result();//Devolver conjunto de varios registros
 	}
 
 //Retornar un usuario especifico
 	public function getUsuario($id){
+		$this->db->select("u.*,e.nombre,e.apellido");
+		$this->db->from("usuarios u");
+		$this->db->join("empleados e","u.empleado_id = e.id");
 		$this->db->where("u.id",$id);
-		$this->db->where("u.estado","1");
-		$resultado = $this->db->get("usuarios");//Antes de cualquier retorno de datos
+		$resultado = $this->db->get();//Antes de cualquier retorno de datos
 		return $resultado->row();//metodo row q Devuelve un solo registro
 	}
 
@@ -47,4 +52,14 @@ class Usuarios_model extends CI_Model {
 		$resultados = $this->db->get();
 		return $resultados->row();
 	}	
+
+	public function verificarExistencia($id){
+
+		$this->db->where("empleado_id",$id);
+		$resultados = $this->db->get("usuarios");
+		if ($resultados->num_rows() > 0) {
+			return true;
+		}
+		return false;
+	}
 }

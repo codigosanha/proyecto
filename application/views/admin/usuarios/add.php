@@ -24,35 +24,30 @@
                         <?php endif;?>
                         <form action="<?php echo base_url();?>administrador/usuarios/store" method="POST">
                             <div class="form-group">
-                                <label for="nombres">Nombres:</label>
-                                <input type="text" id="nombres" name="nombres" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label for="apellidos">Apellidos:</label>
-                                <input type="text" id="apellidos" name="apellidos" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label for="telefono">Telefono:</label>
-                                <input type="text" id="telefono" name="telefono" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Email:</label>
-                                <input type="text" id="email" name="email" class="form-control">
+                                <label for="nombres">Empleados:</label>
+                                <select name="empleado_id" id="empleado_id" class="form-control" required="required">
+                                    <option value="">Seleccione..</option>
+                                    <?php foreach ($empleados as $empleado): ?>
+                                        <option value="<?php echo $empleado->id;?>"><?php echo $empleado->nombre." ".$empleado->apellido ?></option>
+                                    <?php endforeach ?>
+                                </select>
+                                
                             </div>
                             <div class="form-group">
                                 <label for="username">Usuario:</label>
-                                <input type="text" id="username" name="username" class="form-control">
+                                <input type="text" id="username" name="username" class="form-control" value="<?php echo set_value('username') ?: '';?>" required="required">
                             </div>
                             <div class="form-group">
                                 <label for="password">Contraseña:</label>
-                                <input type="password" id="password" name="password" class="form-control">
+                                <input type="password" id="password" name="password" class="form-control" required="required">
                             </div>
                             <div class="form-group">
                                 <label for="rol">Roles:</label>
-                                <select name="rol" id="rol" class="form-control">
-                                    <?php foreach($roles as $rol):?>
-                                        <option value="<?php echo $rol->id;?>"><?php echo $rol->nombre;?></option>
-                                    <?php endforeach;?>
+                                <select name="rol" id="rol" class="form-control" required="required">
+                                    <option value="1">Administrador</option>
+                                    <option value="2">CallCenter</option>
+                                    <option value="3">Bodeguero</option>
+                                    <option value="4">Dependiente de Farmacia</option>
                                 </select>
                             </div>
                             <div class="form-group">

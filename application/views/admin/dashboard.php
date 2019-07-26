@@ -15,7 +15,7 @@
                 <!-- small box -->
                 <div class="small-box bg-aqua">
                     <div class="inner">
-                        <h3>5</h3>
+                        <h3><?php echo $cantClientes; ?></h3>
 
                         <p>Clientes</p>
                     </div>
@@ -30,7 +30,7 @@
                 <!-- small box -->
                 <div class="small-box bg-green">
                     <div class="inner">
-                        <h3>10</h3>
+                        <h3><?php echo $cantProductos; ?></h3>
 
                         <p>Productos</p>
                     </div>
@@ -45,7 +45,7 @@
                 <!-- small box -->
                 <div class="small-box bg-yellow">
                     <div class="inner">
-                        <h3>2</h3>
+                        <h3><?php echo $cantUsuarios; ?></h3>
 
                         <p>Usuarios</p>
                     </div>
@@ -60,7 +60,7 @@
                 <!-- small box -->
                 <div class="small-box bg-red">
                     <div class="inner">
-                        <h3>20</h3>
+                        <h3><?php echo $cantVentas; ?></h3>
 
                         <p>Ventas</p>
                     </div>

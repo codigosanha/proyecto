@@ -4,8 +4,8 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-        Documento
-        <small>Nuevo</small>
+        Sucursales
+        <small>Editar</small>
         </h1>
     </section>
     <!-- Main content -->
@@ -22,11 +22,27 @@
                                 
                              </div>
                         <?php endif;?>
-                        <form action="<?php echo base_url();?>mantenimiento/documento/store" method="POST">
-                            <div class="form-group <?php echo form_error('nombre') == true ? 'has-error':''?>">
+                        <form action="<?php echo base_url();?>administrador/sucursales/update" method="POST">
+                            <input type="hidden" name="idSucursal" value="<?php echo $sucursal->id;?>">
+                            <div class="form-group">
                                 <label for="nombre">Nombre:</label>
-                                <input type="text" class="form-control" id="nombre" name="nombre">
-                                <?php echo form_error("nombre","<span class='help-block'>","</span>");?>
+                                <input type="text" class="form-control" id="nombre" name="nombre" value="<?php echo $sucursal->nombre;?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="telefono">Telefono:</label>
+                                <input type="text" class="form-control" id="telefono" name="telefono" value="<?php echo $sucursal->telefono;?>">
+                            </div>
+                            <div class="form-group">
+                                <label for="departamento">Departamento:</label>
+                                <?php foreach ($departamentos as $departamento): ?>
+                                    <?php
+                                            $selected = "";
+                                            if ($departamento->id == $sucursal->departamento_id) {
+                                                $selected = "selected";
+                                            }
+                                        ?>
+                                    <option value="<?php echo $departamento->id;?>" <?php echo $selected ?>><?php echo $departamento->nombre ?></option>
+                                <?php endforeach ?>
                             </div>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-success btn-flat">Guardar</button>

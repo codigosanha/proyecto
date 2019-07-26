@@ -4,8 +4,8 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-        Documento
-        <small>Editar</small>
+        Sucursales
+        <small>Nuevo</small>
         </h1>
     </section>
     <!-- Main content -->
@@ -22,12 +22,20 @@
                                 
                              </div>
                         <?php endif;?>
-                        <form action="<?php echo base_url();?>mantenimiento/documento/update" method="POST">
-                            <input type="hidden" value="<?php echo $documento->id;?>" name="idDocumento">
-                            <div class="form-group <?php echo form_error('nombre') == true ? 'has-error': '';?>">
+                        <form action="<?php echo base_url();?>administrador/sucursales/store" method="POST">
+                            <div class="form-group">
                                 <label for="nombre">Nombre:</label>
-                                <input type="text" class="form-control" id="nombre" name="nombre" value="<?php echo $documento->nombre?>">
-                                <?php echo form_error("nombre","<span class='help-block'>","</span>");?>
+                                <input type="text" class="form-control" id="nombre" name="nombre" required="required">
+                            </div>
+                            <div class="form-group">
+                                <label for="telefono">Telefono:</label>
+                                <input type="text" class="form-control" id="telefono" name="telefono">
+                            </div>
+                            <div class="form-group">
+                                <label for="departamento">Departamento:</label>
+                                <?php foreach ($departamentos as $departamento): ?>
+                                    <option value="<?php echo $departamento->id;?>"><?php echo $departamento->nombre ?></option>
+                                <?php endforeach ?>
                             </div>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-success btn-flat">Guardar</button>

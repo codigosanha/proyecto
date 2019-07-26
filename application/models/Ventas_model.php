@@ -21,13 +21,13 @@ class Ventas_model extends CI_Model {
 		}
 	}
 	public function getVentasbyDate($fechainicio,$fechafin){
-		$this->db->select("v.*,c.nombre,tc.nombre as tipocomprobante, u.nombres");
+		$this->db->select("v.*,c.nombres, u.username");
 		$this->db->from("ventas v");
 		$this->db->join("clientes c","v.cliente_id = c.id");
-		$this->db->join("tipo_comprobante tc","v.tipo_comprobante_id = tc.id");
 		$this->db->join("usuarios u","v.usuario_id = u.id");
-		$this->db->where("v.fecha >=",$fechainicio);
-		$this->db->where("v.fecha <=",$fechafin);
+		$this->db->where("v.sucursal_id",$this->session->userdata("sucursal_id"));
+		$this->db->where("DATE(v.fecha) >=",$fechainicio);
+		$this->db->where("DATE(v.fecha) <=",$fechafin);
 		$resultados = $this->db->get();
 		if ($resultados->num_rows() > 0) {
 			return $resultados->result();
@@ -134,11 +134,11 @@ class Ventas_model extends CI_Model {
 	}
 
 	public function montos(){
-		$this->db->select("fecha, SUM(total) as monto");
+		$this->db->select("DATE(fecha) as fecha, SUM(total) as monto");
 		$this->db->from("ventas");
-		$this->db->where("estado","1");
-		$this->db->group_by("fecha");
-		$this->db->order_by("fecha");
+		$this->db->where("sucursal_id",$this->session->userdata("sucursal_id"));
+		$this->db->group_by("DATE(fecha)");
+		$this->db->order_by("DATE(fecha)");
 		$resultados = $this->db->get();
 		return $resultados->result();
 	}
@@ -146,8 +146,9 @@ class Ventas_model extends CI_Model {
 	public function montosMeses($year){
 		$this->db->select("MONTH(fecha) as mes, SUM(total) as monto");
 		$this->db->from("ventas");
-		$this->db->where("fecha >=",$year."-01-01");
-		$this->db->where("fecha <=",$year."-12-31");
+		$this->db->where("DATE(fecha) >=",$year."-01-01");
+		$this->db->where("DATE(fecha) <=",$year."-12-31");
+		$this->db->where("sucursal_id",$this->session->userdata("sucursal_id"));
 		$this->db->group_by("mes");
 		$this->db->order_by("mes");
 		$resultados = $this->db->get();

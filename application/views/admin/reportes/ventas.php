@@ -34,18 +34,15 @@
                 <hr>
                 <div class="row">
                     <div class="col-md-12">
-                        <table id="example" class="table table-bordered table-hover">
+                        <table id="example1" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
                                     <th>#</th>
                                     <th>Nombre Cliente</th>
-                                    <th>Cajero</th>
-                                    <th>Tipo Comprobante</th>
                                     <th>Numero del Comprobante</th>
                                     
                                     <th>Fecha</th>
                                     <th>Total</th>
-                                    <th>Estado</th>
                                     <th>Opciones</th>
                                 </tr>
                             </thead>
@@ -54,25 +51,13 @@
                                     <?php foreach($ventas as $venta):?>
                                         <tr>
                                             <td><?php echo $venta->id;?></td>
-                                            <td><?php echo $venta->nombre;?></td>
                                             <td><?php echo $venta->nombres;?></td>
-                                            <td><?php echo $venta->tipocomprobante;?></td>
-                                            <td><?php echo $venta->num_documento;?></td>
+                                            <td><?php echo str_pad($venta->id, 6, "0", STR_PAD_LEFT);?></td>
                                             
                                             <td><?php echo $venta->fecha;?></td>
                                             <td><?php echo $venta->total;?></td>
                                             <td>
-                                                <?php if ($venta->estado == "1") {
-                                                    echo '<span class="label label-success">Pagado</span>';
-                                                }else if($venta->estado == "2"){
-                                                    echo '<span class="label label-warning">Pendiente</span>';
-                                                }else{
-                                                    echo '<span class="label label-danger">Anulado</span>';
-                                                } ?>
-
-                                            </td>
-                                            <td>
-                                                <button type="button" class="btn btn-info btn-view-orden" value="<?php echo $venta->id;?>" data-toggle="modal" data-target="#modal-orden"><span class="fa fa-search"></span></button>
+                                                <button type="button" class="btn btn-info btn-view-venta" value="<?php echo $venta->id;?>" data-toggle="modal" data-target="#modal-orden"><span class="fa fa-search"></span></button>
                                             </td>
                                         </tr>
                                     <?php endforeach;?>

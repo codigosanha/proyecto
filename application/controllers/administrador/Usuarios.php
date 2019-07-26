@@ -2,17 +2,19 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Usuarios extends CI_Controller {
-	private $permisos;
+	
 	public function __construct(){
 		parent::__construct();
-		$this->permisos = $this->backend_lib->control();
+		if (!$this->session->userdata("login")) {
+			redirect(base_url());
+		}
 		$this->load->model("Usuarios_model");
 		$this->load->model("Ventas_model");
+		$this->load->model("Empleados_model");
 	}
 
 	public function index(){
 		$data  = array(
-			'permisos' => $this->permisos,
 			'usuarios' => $this->Usuarios_model->getUsuarios(), 
 		);
 
@@ -23,8 +25,16 @@ class Usuarios extends CI_Controller {
 	}
 
 	public function add(){
+		$empleados = $this->Empleados_model->getEmpleados();
+		$dataEmpleados = array();
+		foreach ($empleados as $e) {
+			if(!$this->Usuarios_model->verificarExistencia($e->id)){
+				$dataEmpleados[] = $e;
+			}
+		}
+		
 		$data  = array(
-			'roles' => $this->Usuarios_model->getRoles(), 
+			'empleados' => $dataEmpleados, 
 		);
 		$this->load->view("layouts/header");
 		$this->load->view("layouts/aside");
@@ -34,22 +44,16 @@ class Usuarios extends CI_Controller {
 
 	public function store(){
 
-		$nombres = $this->input->post("nombres");
-		$apellidos = $this->input->post("apellidos");
-		$telefono = $this->input->post("telefono");
-		$email = $this->input->post("email");
+		$empleado_id = $this->input->post("empleado_id");
 		$username = $this->input->post("username");
 		$password = $this->input->post("password");
 		$rol = $this->input->post("rol");
 
 		$data  = array(
-			'nombres' => $nombres, 
-			'apellidos' => $apellidos,
-			'telefono' => $telefono,
-			'email' => $email,
+			'empleado_id' => $empleado_id, 
 			'username' => $username,
 			'password' => sha1($password),
-			'rol_id' => $rol,
+			'rol' => $rol,
 			'estado' => "1"
 		);
 
@@ -74,7 +78,7 @@ class Usuarios extends CI_Controller {
 
 	public function edit($id){
 		$data  = array(
-			'roles' => $this->Usuarios_model->getRoles(), 
+		
 			'usuario' => $this->Usuarios_model->getUsuario($id)
 		);
 		$this->load->view("layouts/header");
@@ -84,23 +88,15 @@ class Usuarios extends CI_Controller {
 	}
 
 	public function update(){
-		$idusuario = $this->input->post("idusuario");
-		$nombres = $this->input->post("nombres");
-		$apellidos = $this->input->post("apellidos");
-		$telefono = $this->input->post("telefono");
-		$email = $this->input->post("email");
+		$idusuario = $this->input->post("idUsuario");
+		$rol = $this->input->post("rol");
 		$username = $this->input->post("username");
 
 		$rol = $this->input->post("rol");
 
 		$data  = array(
-			'nombres' => $nombres, 
-			'apellidos' => $apellidos,
-			'telefono' => $telefono,
-			'email' => $email,
 			'username' => $username,
-
-			'rol_id' => $rol,
+			'rol' => $rol,
 		);
 
 		if ($this->Usuarios_model->update($idusuario,$data)) {
@@ -119,9 +115,18 @@ class Usuarios extends CI_Controller {
 			'estado' => "0", 
 		);
 		$this->Usuarios_model->update($id,$data);
-		echo "administrador/usuarios";
+		redirect(base_url()."administrador/usuarios");
+		//echo "administrador/usuarios";
 	}
 
+	public function restore($id){
+		$data  = array(
+			'estado' => "1", 
+		);
+		$this->Usuarios_model->update($id,$data);
+		redirect(base_url()."administrador/usuarios");
+		//echo "administrador/usuarios";
+	}
 	public function changepassword(){
 		$id = $this->input->post("idusuario");
 		$newpassword = $this->input->post("newpassword");

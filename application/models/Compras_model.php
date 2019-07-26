@@ -19,13 +19,15 @@ class Compras_model extends CI_Model {
 		}
 	}
 
+
 	public function getComprasbyDate($fechainicio,$fechafin){
 		$this->db->select("c.*,p.nit,p.razon_social as proveedor, u.username");
 		$this->db->from("compras c");
 		$this->db->join("proveedores p","c.proveedor_id = p.id");
 		$this->db->join("usuarios u","c.usuario_id = u.id");
-		$this->db->where("c.fecha >=",$fechainicio);
-		$this->db->where("c.fecha <=",$fechafin);
+		$this->db->where("c.sucursal_id",$this->session->userdata("sucursal_id"));
+		$this->db->where("DATE(c.fecha) >=",$fechainicio);
+		$this->db->where("DATE(c.fecha) <=",$fechafin);
 		$resultados = $this->db->get();
 		if ($resultados->num_rows() > 0) {
 			return $resultados->result();

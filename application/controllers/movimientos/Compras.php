@@ -6,6 +6,9 @@ class Compras extends CI_Controller {
 	public function __construct(){
 		parent::__construct();
 		//$this->permisos = $this->backend_lib->control();
+		if (!$this->session->userdata("login")) {
+			redirect(base_url());
+		}
 		$this->load->model("Productos_model");
 		$this->load->model("Compras_model");
 		$this->load->model("Proveedores_model");
@@ -48,7 +51,7 @@ class Compras extends CI_Controller {
 
 	public function getProductoByCode(){
 		$codigo_barra = $this->input->post("codigo_barra");
-		$producto = $this->Compras_model->getProductoByCode($codigo_barra);
+		$producto = $this->Inventario_model->getProductoByCode($codigo_barra);
 
 		if ($producto != false) {
 			echo json_encode($producto);

@@ -5,6 +5,7 @@ class Auth extends CI_Controller {
 	//private $modulo = "Usuarios";
 	public function __construct(){
 		parent::__construct();
+		
 		$this->load->model("Usuarios_model");//Referencia a la clase Auth $this-->
 		$this->load->model("Sucursales_model");
 	}

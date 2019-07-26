@@ -1,5 +1,15 @@
 $(document).ready(function () {
-    
+    $(document).on("click", ".btn-view-ajuste", function(){
+        id = $(this).val();
+        showAjuste(id);
+
+    });
+    $(document).on("keyup mouseup", ".stocks_fisico", function(){
+        stocks_fisico = Number($(this).val());
+        stocks_bd = Number($(this).closest("tr").find("td:eq(1)").text());
+        diferencia_stock = stocks_fisico-stocks_bd;
+        $(this).closest("tr").find("td:eq(3)").children('input').val(diferencia_stock);
+    });
     $(document).on("click", ".checkProducto", function(){
         idProducto = $(this).val();
         if ($(this).is(":checked")) {
@@ -145,13 +155,12 @@ $(document).ready(function () {
                         });
                     }else{
                         html = "<tr>";
-                        html +="<td><input type='hidden' name='idproductos[]' value='"+data.id+"'>"+data.codigo_barras+"</td>";
+                        html +="<td><input type='hidden' name='idproductos[]' value='"+data.id+"'>"+data.cod_barras+"</td>";
                         html +="<td>"+data.nombre+"</td>";
-                        html +="<td>"+data.marca+"</td>";
-                        html +="<td><input type='hidden' name='precios[]' value='"+data.precio+"'>"+data.precio+"</td>";
+                        html +="<td><input type='hidden' name='precios[]' value='"+data.precio_venta+"'>"+data.precio_venta+"</td>";
                         html +="<td>"+data.stock+"</td>";
-                        html +="<td><input type='number' name='cantidades[]' class='cantidadesVenta' value='1' onkeypress='validate(event)'></td>";
-                        html +="<td><input type='hidden' name='importes[]' value='"+data.precio+"'><p>"+data.precio+"</p></td>";
+                        html +="<td><input type='number' name='cantidades[]' class='cantidadesVenta' value='1' onkeypress='validate(event)' required='required'></td>";
+                        html +="<td><input type='hidden' name='importes[]' value='"+data.precio_venta+"'><p>"+data.precio_venta+"</p></td>";
                         html +="<td><button type='button' class='btn btn-danger btn-remove-producto-compra'><span class='fa fa-times'></span></button></td>";
                         html +="</tr>"
 
@@ -188,9 +197,8 @@ $(document).ready(function () {
                         });
                     }else{
                         html = "<tr>";
-                        html +="<td><input type='hidden' name='idproductos[]' value='"+data.id+"'>"+data.codigo_barras+"</td>";
+                        html +="<td><input type='hidden' name='idproductos[]' value='"+data.id+"'>"+data.cod_barras+"</td>";
                         html +="<td>"+data.nombre+"</td>";
-                        html +="<td>"+data.marca+"</td>";
                         html +="<td><input type='hidden' name='precios[]' value='"+data.precio_compra+"'>"+data.precio_compra+"</td>";
                         html +="<td><input type='text' name='cantidades[]' class='cantidadesCompra' value='1'></td>";
                         html +="<td><input type='hidden' name='importes[]' value='"+data.precio_compra+"'><p>"+data.precio_compra+"</p></td>";
@@ -1246,7 +1254,27 @@ function generarnumero(numero){
     }
 }
 
-
+function showAjuste(id){
+    $.ajax({
+        url: base_url + "inventario/ajuste/view/" + id,
+        type: "POST",
+        success: function(resp){
+            $("#modal-ajuste").modal("show");
+            $("#modal-ajuste .modal-body").html(resp);
+        }
+    });
+}
+function showVenta(id){
+    $.ajax({
+        url: base_url + "movimientos/ventas/view/" + id,
+        type: "POST",
+        data: {id:id},
+        success: function(resp){
+            $("#modal-venta").modal("show");
+            $("#modal-venta .modal-body").html(resp);
+        }
+    });
+}
 
 function sumar(){
     subtotal = 0;

@@ -30,10 +30,11 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Cod. Barras</th>
+                                    <th>Image</th>
                                     <th>Nombre</th>
                                     <th>Precio Compra</th>
                                     <th>Precio Venta</th>
-                                    <th>Descripcion</th>
+                                    
                                     <th>Categoria</th>
                                     <th>Marca</th>
                                     <th>Presentacion</th>
@@ -50,7 +51,10 @@
                                                            <img src="<?php echo base_url().'assets/barcode/'.$producto->cod_barras.".png";?>" alt="">
                                                        </td>
                                                        <td><img src="<?php echo base_url().'assets/imagenes_productos/'.$producto->imagen?>" alt="<?php echo $producto->nombre?>" style="width: 100px; " class="img-responsive"></td> -->     
-                                            <td><?php echo $producto->cod_barras;?></td>           
+                                            <td>
+                                               <img src="<?php echo base_url().'assets/barcode/'.$producto->cod_barras.".png";?>" alt="">
+                                           </td>
+                                            <td><img src="<?php echo base_url().'assets/imagenes_productos/'.$producto->imagen?>" alt="<?php echo $producto->nombre?>" style="width: 100px; " class="img-responsive"></td>
                                             <td><?php echo $producto->nombre;?></td>
                                             <td><?php echo $producto->precio_compra;?></td>
                                             <td><?php echo $producto->precio_venta;?></td>

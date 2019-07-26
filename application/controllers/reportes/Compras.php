@@ -5,19 +5,21 @@ class Compras extends CI_Controller {
 
 	public function __construct(){
 		parent::__construct();
-		
+		if (!$this->session->userdata("login")) {
+			redirect(base_url());
+		}
 		$this->load->model("Compras_model");
 	}
 
 	public function index(){
-		$fechainicio = $this->input->post("fechainicio");
-		$fechafin = $this->input->post("fechafin");
+		$fechainicio = date("Y-m-d");
+		$fechafin = date("Y-m-d");
 		if ($this->input->post("buscar")) {
-			$compras = $this->Compras_model->getComprasbyDate($fechainicio,$fechafin);
+			$fechainicio = $this->input->post("fechainicio");
+			$fechafin = $this->input->post("fechafin");
+			
 		}
-		else{
-			$compras = $this->Compras_model->getCompras();
-		}
+		$compras = $this->Compras_model->getComprasbyDate($fechainicio,$fechafin);
 		$data = array(
 			"compras" => $compras,
 			"fechainicio" => $fechainicio,

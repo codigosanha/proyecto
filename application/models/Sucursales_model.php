@@ -12,8 +12,11 @@ class Sucursales_model extends CI_Model {
 	}
 
 	public function getSucursal($id){
-		$this->db->where("id",$id);
-		$resultado = $this->db->get("sucursal");
+		$this->db->select("s.*, d.nombre as departamento");
+		$this->db->from("sucursal s");
+		$this->db->join("departamentos d", "s.departamento_id = d.id");
+		$this->db->where("s.id",$id);
+		$resultado = $this->db->get();
 		return $resultado->row();
 	}
 

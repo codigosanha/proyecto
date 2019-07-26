@@ -45,7 +45,7 @@
         </table>
     </div>
     <div class="form-group">
-        <?php if (!$pedido->estado): ?>
+        <?php if (!$pedido->estado && $this->session->userdata("rol") != 2): ?>
             <a href="<?php echo base_url();?>movimientos/pedidos/finalizarPedido/<?php echo $pedido->id;?>" class="btn btn-success btn-block">Finalizar Pedido</a>
         <?php endif ?>
         

@@ -7,6 +7,9 @@ class Pedidos extends CI_Controller {
 	public function __construct(){
 		parent::__construct();
 		//$this->permisos = $this->backend_lib->control();
+		if (!$this->session->userdata("login")) {
+			redirect(base_url());
+		}
 		$this->load->model("Pedidos_model");
 		$this->load->model("Ventas_model");
 		$this->load->model("Clientes_model");
@@ -78,7 +81,7 @@ class Pedidos extends CI_Controller {
 		$precios = $this->input->post("precios");
 
 		$data = array(
-			'fecha' => $fecha,
+			'fecha' => $fecha." ".date("H:i:s"),
 			'fecha_entrega' => $fecha_entrega,
 			'total' => $total,
 			'cliente_id' => $cliente,
@@ -119,7 +122,7 @@ class Pedidos extends CI_Controller {
 			$data = array(
 				"stock" => $ps->stock - $cantidades[$i] 
 			);
-			$this->Inventario_model->update($ps->id,$data);
+			$this->Inventario_model->update($ps->idinv,$data);
 		}
 	}
 
@@ -163,9 +166,9 @@ class Pedidos extends CI_Controller {
 					);
 					$this->Ventas_model->saveDetalle($dataDetalle);
 				}
-				$this->session->set_flashdata("success", "Se ha finalizado el pedido con exito");
+				$this->session->set_flashdata("success", $venta);
 				//echo "1";
-				redirect(base_url()."movimientos/pedidos");
+				redirect(base_url()."movimientos/ventas");
 			}
 			else{
 				$this->session->set_flashdata("error", "No se pudo actualizar el estado del pedido");

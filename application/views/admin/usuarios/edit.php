@@ -23,34 +23,23 @@
                              </div>
                         <?php endif;?>
                         <form action="<?php echo base_url();?>administrador/usuarios/update" method="POST">
-                            <input type="hidden" name="idusuario" value="<?php echo $usuario->id ?>">
+                            <input type="hidden" name="idUsuario" value="<?php echo $usuario->id ?>">
                             <div class="form-group">
-                                <label for="nombres">Nombres:</label>
-                                <input type="text" id="nombres" name="nombres" class="form-control" value="<?php echo $usuario->nombres;?>">
-                            </div>
-                            <div class="form-group">
-                                <label for="apellidos">Apellidos:</label>
-                                <input type="text" id="apellidos" name="apellidos" class="form-control" value="<?php echo $usuario->apellidos;?>">
-                            </div>
-                            <div class="form-group">
-                                <label for="telefono">Telefono:</label>
-                                <input type="text" id="telefono" name="telefono" class="form-control" value="<?php echo $usuario->telefono;?>">
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Email:</label>
-                                <input type="text" id="email" name="email" class="form-control" value="<?php echo $usuario->email;?>">
+                                <label for="nombres">Empleado:</label>
+                                <input type="text" id="nombres" name="nombres" class="form-control" value="<?php echo $usuario->nombre." ".$usuario->apellido;?>" readonly="readonly">
                             </div>
                             <div class="form-group">
                                 <label for="username">Usuario:</label>
-                                <input type="text" id="username" name="username" class="form-control" value="<?php echo $usuario->username;?>">
+                                <input type="text" id="username" name="username" class="form-control" value="<?php echo $usuario->username;?>" required="required">
                             </div>
                            
                             <div class="form-group">
                                 <label for="rol">Roles:</label>
-                                <select name="rol" id="rol" class="form-control">
-                                    <?php foreach($roles as $rol):?>
-                                        <option value="<?php echo $rol->id;?>" <?php echo $rol->id == $usuario->rol_id ? "selected":"";?>><?php echo $rol->nombre;?></option>
-                                    <?php endforeach;?>
+                                <select name="rol" id="rol" class="form-control" required="required">
+                                    <option value="1" <?php echo $usuario->rol == 1 ? "selected":""; ?>>Administrador</option>
+                                    <option value="2" <?php echo $usuario->rol == 2 ? "selected":""; ?>>CallCenter</option>
+                                    <option value="3" <?php echo $usuario->rol == 3 ? "selected":""; ?>>Bodeguero</option>
+                                    <option value="4" <?php echo $usuario->rol == 4 ? "selected":""; ?>>Dependiente de Farmacia</option>
                                 </select>
                             </div>
                             <div class="form-group">

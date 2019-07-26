@@ -2,22 +2,20 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Ventas extends CI_Controller {
-private $permisos;
 	public function __construct(){
 		parent::__construct();
-		$this->permisos = $this->backend_lib->control();
 		$this->load->model("Ventas_model");
 	}
 
 	public function index(){
-		$fechainicio = $this->input->post("fechainicio");
-		$fechafin = $this->input->post("fechafin");
+		$fechainicio = date("Y-m-d");
+		$fechafin = date("Y-m-d");
 		if ($this->input->post("buscar")) {
-			$ventas = $this->Ventas_model->getVentasbyDate($fechainicio,$fechafin);
+			$fechainicio = $this->input->post("fechainicio");
+			$fechafin = $this->input->post("fechafin");
+			
 		}
-		else{
-			$ventas = $this->Ventas_model->getVentas();
-		}
+		$ventas = $this->Ventas_model->getVentasbyDate($fechainicio,$fechafin);
 		$data = array(
 			"ventas" => $ventas,
 			"fechainicio" => $fechainicio,

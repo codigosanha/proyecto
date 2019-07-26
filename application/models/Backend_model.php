@@ -16,10 +16,19 @@ class Backend_model extends CI_Model {
 	}
 
 	public function rowCount($tabla){
-		if ($tabla != "ventas") {
-			$this->db->where("estado","1");
+		if ($tabla == "ventas") {
+			$this->db->where("sucursal_id",$this->session->userdata("sucursal_id"));
+			$resultados = $this->db->get($tabla);
+		}else if($tabla == "usuarios"){
+			$this->db->select('*');
+			$this->db->from('usuarios u');
+			$this->db->join('empleados e', 'u.empleado_id= e.id');
+			$this->db->where("e.sucursal_id",$this->session->userdata("sucursal_id"));
+			$resultados = $this->db->get();
+		}else{
+			$resultados = $this->db->get($tabla);
 		}
-		$resultados = $this->db->get($tabla);
+		
 		return $resultados->num_rows();
 	}
 

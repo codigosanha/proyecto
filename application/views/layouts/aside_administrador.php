@@ -86,8 +86,8 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="#"><i class="fa fa-circle-o"></i> Usuarios</a></li>
-            <li><a href="#"><i class="fa fa-circle-o"></i> Sucursales</a></li>
+            <li><a href="<?php echo base_url();?>administrador/usuarios"><i class="fa fa-circle-o"></i> Usuarios</a></li>
+            <li><a href="<?php echo base_url();?>administrador/sucursales"><i class="fa fa-circle-o"></i> Sucursales</a></li>
           </ul>
         </li>
 
@@ -101,6 +101,7 @@
           </a>
           <ul class="treeview-menu">
             <li><a href="<?php echo base_url();?>inventario/productos"><i class="fa fa-circle-o"></i> Productos</a></li>
+            <li><a href="<?php echo base_url();?>inventario/ajuste"><i class="fa fa-circle-o"></i> Ajuste de Productos</a></li>
           </ul>
         </li>
 

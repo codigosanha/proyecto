@@ -16,8 +16,10 @@
                 <input type="hidden" id="ventas" value="ventas">
                 <div class="row">
                     <div class="col-md-12">
+                        <?php if ($this->session->userdata("rol") == 2 || $this->session->userdata("rol") == 1): ?>
+                            <a href="<?php echo base_url();?>movimientos/pedidos/add" class="btn btn-primary btn-flat"><span class="fa fa-plus"></span> Agregar Pedido</a>
+                        <?php endif ?>
                         
-                        <a href="<?php echo base_url();?>movimientos/pedidos/add" class="btn btn-primary btn-flat"><span class="fa fa-plus"></span> Agregar Pedido</a>
                         
                     </div>
                 </div>

@@ -50,7 +50,10 @@
                                 <label for="precio_venta">Precio de Venta:</label>
                                 <input type="text" class="form-control" id="precio_venta" name="precio_venta" required="required" value="<?php echo $producto->precio_venta;?>">
                             </div>
-
+                            <div class="form-group">
+                                <label for="imagen">Imagen:</label>
+                                <input type="file" class="form-control" id="imagen" name="imagen">
+                            </div>
                             
                                 
                             

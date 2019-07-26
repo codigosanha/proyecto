@@ -15,49 +15,53 @@
             <div class="box-body">
                 <div class="row">
                     <div class="col-md-12">
-                        <?php if($permisos->insert == 1):?>
+                      
                         <a href="<?php echo base_url();?>administrador/usuarios/add" class="btn btn-primary btn-flat"><span class="fa fa-plus"></span> Agregar Usuario</a>
-                        <?php endif;?>
+           
                     </div>
                 </div>
                 <hr>
                 <div class="row">
                     <div class="col-md-12">
-                        <table id="example1" class="table table-bordered table-hover">
+                        <table id="tableSimple" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
                                     <th>#</th>
                                     <th>Nombres</th>
                                     <th>Apellidos</th>
-                                    <th>Email</th>
+                                   
                                     <th>Usuario</th>
                                     <th>Rol</th>
                                     <th>Cambiar Contraseña</th>
-                                    <th>opciones</th>
+                                    <th>Opciones</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                <?php $roles = ['Administrador','CallCenter','Bodeguero','Dependiente de Farmacia']?>
                                 <?php if(!empty($usuarios)):?>
                                     <?php foreach($usuarios as $usuario):?>
                                         <tr>
                                             <td><?php echo $usuario->id;?></td>
-                                            <td><?php echo $usuario->nombres;?></td>
-                                            <td><?php echo $usuario->apellidos;?></td>
-                                            <td><?php echo $usuario->email;?></td>
+                                            <td><?php echo $usuario->nombre;?></td>
+                                            <td><?php echo $usuario->apellido;?></td>
                                             <td><?php echo $usuario->username;?></td>
-                                            <td><?php echo $usuario->rol;?></td>
-                                            <td><button id="change-password" type="buttton" value="<?php echo $usuario->id;?>" class="btn btn-default" data-toggle="modal" data-target="#modal-password"><i class="fa fa-cogs"></i> Cambiar Contraseña</button></td>
+                                            <td><?php echo $roles[$usuario->rol - 1];?></td>
+                                            
+                                            <td><button id="change-password" type="buttton" value="<?php echo $usuario->id;?>" class="btn btn-default" data-toggle="modal" data-target="#modal-password"><i class="fa fa-cogs"></i> Cambiar</button></td>
                                             <td>
                                                 <div class="btn-group">
                                                     <button type="button" class="btn btn-info btn-view-usuario" data-toggle="modal" data-target="#modal-default" value="<?php echo $usuario->id;?>">
                                                         <span class="fa fa-search"></span>
                                                     </button>
-                                                    <?php if($permisos->update == 1):?>
+                                                
                                                     <a href="<?php echo base_url()?>administrador/usuarios/edit/<?php echo $usuario->id;?>" class="btn btn-warning"><span class="fa fa-pencil"></span></a>
-                                                    <?php endif;?>
-                                                    <?php if($permisos->delete == 1):?>
+                                                    <?php if($usuario->estado): ?>
                                                     <a href="<?php echo base_url();?>administrador/usuarios/delete/<?php echo $usuario->id;?>" class="btn btn-danger btn-remove"><span class="fa fa-remove"></span></a>
+                                                     <?php else :?>
+                                                    <a href="<?php echo base_url();?>administrador/usuarios/restore/<?php echo $usuario->id;?>" class="btn btn-success btn-check"><span class="fa fa-check"></span></a>
                                                     <?php endif;?>
+                                                    
+                                                    
                                                 </div>
                                             </td>
                                         </tr>

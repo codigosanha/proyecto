@@ -7,6 +7,9 @@ class Ventas extends CI_Controller {
 	public function __construct(){
 		parent::__construct();
 		//$this->permisos = $this->backend_lib->control();
+		if (!$this->session->userdata("login")) {
+			redirect(base_url());
+		}
 		$this->load->model("Ventas_model");
 		$this->load->model("Clientes_model");
 		$this->load->model("Productos_model");
@@ -53,7 +56,7 @@ class Ventas extends CI_Controller {
 
 	public function getProductoByCode(){
 		$codigo_barra = $this->input->post("codigo_barra");
-		$producto = $this->Ventas_model->getProductoByCode($codigo_barra);
+		$producto = $this->Inventario_model->getProductoByCode($codigo_barra);
 
 		if ($producto != false) {
 			echo json_encode($producto);
@@ -87,7 +90,7 @@ class Ventas extends CI_Controller {
 			$this->saveDetalle($venta, $idproductos, $precios, $cantidades, $importes);
 			$this->updateStock($this->session->userdata("sucursal_id"), $idproductos, $cantidades);
 
-			$this->session->set_flashdata("success", "Los datos fueron guardados exitosamente");
+			$this->session->set_flashdata("success", $venta);
 			//echo "1";
 			redirect(base_url()."movimientos/ventas");
 		}

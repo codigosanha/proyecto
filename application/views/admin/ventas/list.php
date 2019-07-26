@@ -1,4 +1,11 @@
-
+<?php if($this->session->flashdata("success")):?>
+    <script>
+        $(document).ready(function(){
+            var id= '<?php echo $this->session->flashdata("success"); ?>';
+            showVenta(id);
+        });
+    </script>
+<?php endif; ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
