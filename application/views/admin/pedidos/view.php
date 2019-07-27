@@ -14,6 +14,7 @@
         <p><b>Fecha Registro: </b><?php echo $pedido->fecha;?></p>
         <p><b>Fecha Entrega: </b><?php echo $pedido->fecha_entrega;?></p>
         <p><b>Estado del Pedido: </b><?php echo $pedido->estado == 1?'Entregado':'Pendiente';?></p>
+        <p><b>Sucursal: </b><?php echo $pedido->sucursal;?></p>
     </div>
 
     <div class="form-group">

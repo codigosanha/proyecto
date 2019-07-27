@@ -59,7 +59,6 @@
                                             <td><?php echo $producto->precio_compra;?></td>
                                             <td><?php echo $producto->precio_venta;?></td>
                                             
-                                            <td><?php echo $producto->descripcion;?></td>
                                             <td><?php echo $producto->categoria;?></td>
                                             <td><?php echo $producto->marca;?></td>
                                             <td><?php echo $producto->presentacion;?></td>

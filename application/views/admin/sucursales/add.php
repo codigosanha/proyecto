@@ -33,9 +33,11 @@
                             </div>
                             <div class="form-group">
                                 <label for="departamento">Departamento:</label>
+                                <select name="departamento_id" id="departamento_id" class="form-control">
                                 <?php foreach ($departamentos as $departamento): ?>
                                     <option value="<?php echo $departamento->id;?>"><?php echo $departamento->nombre ?></option>
                                 <?php endforeach ?>
+                                </select>
                             </div>
                             <div class="form-group">
                                 <button type="submit" class="btn btn-success btn-flat">Guardar</button>

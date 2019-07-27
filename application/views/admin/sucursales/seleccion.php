@@ -26,6 +26,10 @@
                 <?php endforeach ?>
     		    
     		</div>
+        <?php if ($this->session->userdata("sucursal_id")): ?>
+          <a href="<?php echo base_url();?>dashboard" class="btn btn-danger btn-block">Regresar</a>
+        <?php endif ?>
+        
     	</div>
     </div>
 </div>

@@ -37,9 +37,10 @@ class Pedidos_model extends CI_Model {
 	}
 
 	public function getPedido($id){
-		$this->db->select("p.*,c.nombres,c.telefono,c.direccion");
+		$this->db->select("p.*,c.nombres,c.telefono,c.direccion,s.nombre as sucursal");
 		$this->db->from("pedidos p");
 		$this->db->join("clientes c","p.cliente_id = c.id");
+		$this->db->join("sucursal s","p.sucursal_id = s.id");
 		$this->db->where("p.id",$id);
 		$resultado = $this->db->get();
 		return $resultado->row();

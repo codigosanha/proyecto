@@ -86,6 +86,7 @@
                             <div class="form-group">
                                 <button type="submit" class="btn btn-success btn-flat" id="btn-guardar-venta"><i class="fa fa-save"></i> Guardar Venta</button>
                                 <a href="<?php echo base_url().$this->uri->segment(1).'/'.$this->uri->segment(2); ?>" class="btn btn-danger btn-flat"><i class="fa fa-times"></i> Cancelar</a>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-add-cliente">Registrar cliente</button>
                             </div>
                                 
                         </div>
@@ -102,3 +103,39 @@
 
 </div>
 <!-- /.content-wrapper -->
+
+
+<div class="modal fade" id="modal-add-cliente">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Registro de Cliente</h4>
+      </div>
+      <form action="#" method="POST" id="form-add-cliente">
+      <div class="modal-body">
+        <div class="form-group">
+            <label for="">Nombres</label>
+            <input type="text" name="nombres" class="form-control" placeholder="Nombres">
+        </div>
+        <div class="form-group">
+            <label for="">Direccion</label>
+            <input type="text" name="direccion" class="form-control" placeholder="Direccion">
+        </div>
+        <div class="form-group">
+            <label for="">Telefono</label>
+            <input type="text" name="telefono" class="form-control" placeholder="Telefono">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-primary btn-flat"><span class="fa fa-print"></span> Guardar</button>
+      </div>
+      </form>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->

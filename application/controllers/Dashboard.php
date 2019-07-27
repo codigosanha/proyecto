@@ -36,8 +36,6 @@ class Dashboard extends CI_Controller {
 	}
 
 	public function viewSeleccion(){
-		$this->session->unset_userdata('sucursal_id');
-		$this->session->unset_userdata('sucursal_name');
 		$data =array(
 			"sucursales" => $this->Sucursales_model->getSucursales()
 		);

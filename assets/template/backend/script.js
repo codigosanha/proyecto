@@ -1,4 +1,33 @@
 $(document).ready(function () {
+    $("#form-add-cliente").submit(function(e){
+        e.preventDefault();
+        var modulo = $("#modulo").val();
+        var formData = $(this).serialize();
+        $.ajax({
+            url: base_url + modulo+ "/saveCliente",
+            type: "POST",
+            data: formData,
+            dataType: "json",
+            success: function(data){
+                if (data!="0") {
+                     html = "<option value=''>Seleccione...</option>";
+                    $.each(data.clientes, function(key, value){
+                        selected = "";
+                        if (value.id == data.cliente_registrado) {
+                            selected = "selected";
+                        }
+                        html += "<option value='"+value.id+"' "+selected+">"+value.nombres+"</option>";
+                    });
+                    $("#cliente").html(html);
+                    $("#modal-add-cliente").modal("hide");
+                }else{
+                    swal("Error!","No se pudo registrar el cliente", "error");
+                }
+               
+            }
+
+        });
+    });
     $(document).on("click", ".btn-view-ajuste", function(){
         id = $(this).val();
         showAjuste(id);
@@ -813,16 +842,60 @@ $(document).ready(function () {
 
    
     
-    $('#table-with-buttons').DataTable( {
+    $('#table-with-buttons-productos').DataTable( {
         dom: 'Bfrtip',
         buttons: [
             {
                 extend: 'excelHtml5',
-                title: $("h3").text(),
+                title: $("#title").val(),
                 exportOptions: {
-                    columns: [ 0, 1,2, 3, 4, 5,6]
+                    columns: [ 0, 1,2 ]
                 },
-            }
+            },
+            {
+                extend: 'pdfHtml5',
+                title: $("#title").val(),
+                exportOptions: {
+                    columns: [0,1,2]
+                },
+                
+            },
+        ],
+
+        language: {
+            "lengthMenu": "Mostrar _MENU_ registros por pagina",
+            "zeroRecords": "No se encontraron resultados en su busqueda",
+            "searchPlaceholder": "Buscar registros",
+            "info": "Mostrando registros de _START_ al _END_ de un total de  _TOTAL_ registros",
+            "infoEmpty": "No existen registros",
+            "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+            "search": "Buscar:",
+            "paginate": {
+                "first": "Primero",
+                "last": "Último",
+                "next": "Siguiente",
+                "previous": "Anterior"
+            },
+        }
+    });
+    $('#table-with-buttons-activos').DataTable( {
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                title: $("#title").val(),
+                exportOptions: {
+                    columns: [ 0, 1,2,3 ]
+                },
+            },
+            {
+                extend: 'pdfHtml5',
+                title: $("#title").val(),
+                exportOptions: {
+                    columns: [0,1,2,3]
+                },
+                
+            },
         ],
 
         language: {

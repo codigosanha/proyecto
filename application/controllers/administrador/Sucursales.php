@@ -10,6 +10,7 @@ class Sucursales extends CI_Controller {
 			redirect(base_url());
 		}
 		$this->load->model("Sucursales_model");
+		$this->load->model("Departamentos_model");
 		//if (!$this->session->userdata('username')){ 
 		//	redirect('Auth');
 	}
@@ -27,10 +28,13 @@ class Sucursales extends CI_Controller {
 	}
 
 	public function add(){
+		$data = array(
+			"departamentos" => $this->Departamentos_model->getDepartamentos()
+		);
 
 		$this->load->view("layouts/header");
 		$this->load->view("layouts/aside");
-		$this->load->view("admin/sucursales/add");
+		$this->load->view("admin/sucursales/add",$data);
 		$this->load->view("layouts/footer");
 	}
 
@@ -58,6 +62,7 @@ class Sucursales extends CI_Controller {
 	public function edit($id){//Recibe el parametro id de la categoria
 		$data  = array(
 			'sucursal' => $this->Sucursales_model->getSucursal($id), 
+			"departamentos" => $this->Departamentos_model->getDepartamentos()
 		);
 		$this->load->view("layouts/header");
 		$this->load->view("layouts/aside");

@@ -135,21 +135,16 @@ class Ventas extends CI_Controller {
 
 
 
-	public function savecliente(){
-		$nombre = $this->input->post("nombre");
-		//$tipodocumento = $this->input->post("tipodocumento");
-		//$tipocliente = $this->input->post("tipocliente");
+	public function saveCliente(){
+		$nombres = $this->input->post("nombres");
+
 		$direccion = $this->input->post("direccion");
 		$telefono = $this->input->post("telefono");
-		//$num_documento = $this->input->post("numero");
 
 		$data  = array(
-			'nombre' => $nombre, 
-		//	'tipo_documento_id' => $tipodocumento,
-		//	'tipo_cliente_id' => $tipocliente,
+			'nombres' => $nombres, 
 			'direccion' => $direccion,
 			'telefono' => $telefono,
-		//	'num_documento' => $num_documento,
 			'estado' => "1"
 		);
 		$cliente = $this->Ventas_model->savecliente($data);
@@ -158,8 +153,8 @@ class Ventas extends CI_Controller {
 		}
 		else{
 			$data  = array(
-				'id' => $cliente, 
-				'nombres' => $nombre,
+				'cliente_registrado' => $cliente, 
+				'clientes' => $this->Clientes_model->getClientes(),
 			);
 			echo json_encode($data);
 		}

@@ -151,7 +151,8 @@ class Pedidos extends CI_Controller {
 				'total' => $total,
 				'cliente_id' => $cliente,
 				'usuario_id' => $this->session->userdata('id'),
-				'estado' => "1"
+				'estado' => "1",
+				'sucursal_id' => $this->session->userdata('sucursal_id')
 			);
 			$venta = $this->Ventas_model->save($data);
 			if ($venta) {
@@ -182,7 +183,31 @@ class Pedidos extends CI_Controller {
 			redirect(base_url()."movimientos/pedidos");
 		}
 	}
+	public function saveCliente(){
+		$nombres = $this->input->post("nombres");
 
+		$direccion = $this->input->post("direccion");
+		$telefono = $this->input->post("telefono");
+
+		$data  = array(
+			'nombres' => $nombres, 
+			'direccion' => $direccion,
+			'telefono' => $telefono,
+			'estado' => "1"
+		);
+		$cliente = $this->Ventas_model->savecliente($data);
+		if (!$cliente) {
+			echo "0";
+		}
+		else{
+			$data  = array(
+				'cliente_registrado' => $cliente, 
+				'clientes' => $this->Clientes_model->getClientes(),
+			);
+			echo json_encode($data);
+		}
+		
+	}
 
 
 }
